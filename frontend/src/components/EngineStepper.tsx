@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Check, Loader2 } from 'lucide-react';
-import { MascotBox } from './Illustrations';
 
 interface EngineStepperProps {
   onComplete?: () => void;
 }
 
 const STEPS = [
-  'Reading your food properties',
-  'Working out barrier targets',
-  'Matching 8 certified packaging materials',
-  'Formulating plain-language reasons',
-];
+  'Reading commodity specifications & ambient conditions',
+  'Deriving barrier requirement targets & equilibrium kinetics',
+  'Screening certified packaging substrate library',
+  'Composing engineering rationale & literature citations',
+] as const;
 
 export const EngineStepper: React.FC<EngineStepperProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -23,85 +22,77 @@ export const EngineStepper: React.FC<EngineStepperProps> = ({ onComplete }) => {
           return prev + 1;
         }
         clearInterval(timer);
-        if (onComplete) onComplete();
+        onComplete?.();
         return prev;
       });
-    }, 180);
+    }, 160);
 
     return () => clearInterval(timer);
   }, [onComplete]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Stepper Card */}
-      <div className="brutal-card p-6 bg-card border-3 border-ink relative overflow-hidden">
-        <div className="flex items-center justify-between mb-4 border-b-3 border-ink pb-3">
-          <div className="flex items-center space-x-3">
-            <MascotBox className="w-10 h-10" />
-            <div>
-              <h4 className="text-base font-extrabold text-ink">
-                Sahayak Packaging Engine Active
-              </h4>
-              <p className="text-xs text-ink font-semibold">
-                Executing thermodynamic & respiration rules...
-              </p>
-            </div>
-          </div>
-          <span className="bg-sun text-ink font-mono text-xs font-bold px-2.5 py-1 rounded border-2 border-ink shadow-brutal-sm">
-            {Math.min(100, Math.round((currentStep / STEPS.length) * 100))}%
-          </span>
+      <div className="card p-5 relative overflow-hidden">
+        {/* Progress rule along top edge */}
+        <div className="absolute top-0 left-0 right-0">
+          <div className="progress-rule" />
         </div>
 
-        {/* Steps List */}
-        <div className="space-y-3">
+        {/* Card header */}
+        <div className="card-header mb-4">
+          <span className="label">Rules Engine Active</span>
+          <span className="caption">Evaluating Substrates</span>
+        </div>
+
+        {/* Step list */}
+        <div className="space-y-2.5">
           {STEPS.map((label, idx) => {
-            const isDone = currentStep > idx;
+            const isDone    = currentStep > idx;
             const isCurrent = currentStep === idx;
 
             return (
               <div
                 key={label}
-                className={`flex items-center space-x-3 p-2.5 rounded-lg border-2 border-ink transition-all ${
+                className={`flex items-center gap-3 px-3 py-2 border border-rule rounded text-xs transition-opacity duration-150 ${
                   isDone
-                    ? 'bg-green text-ink font-bold'
+                    ? 'bg-card text-ink'
                     : isCurrent
-                    ? 'bg-sun text-ink font-bold'
-                    : 'bg-paper text-ink/60 opacity-60 font-medium'
+                    ? 'bg-wash/40 text-ink font-medium'
+                    : 'text-mute/60 border-rule/50'
                 }`}
               >
-                <div className="w-6 h-6 rounded-full bg-card border-2 border-ink flex items-center justify-center flex-shrink-0">
+                <div
+                  className="w-4 h-4 flex items-center justify-center border border-rule rounded-sm flex-shrink-0 bg-paper"
+                >
                   {isDone ? (
-                    <Check className="w-3.5 h-3.5 text-ink animate-pop-check" strokeWidth={3.5} />
+                    <Check className="w-3 h-3 text-ink" strokeWidth={2} aria-hidden="true" />
                   ) : isCurrent ? (
-                    <Loader2 className="w-3.5 h-3.5 text-ink animate-spin" />
+                    <Loader2 className="w-2.5 h-2.5 text-ink animate-spin" aria-hidden="true" />
                   ) : (
-                    <span className="text-[10px] font-mono font-bold">{idx + 1}</span>
+                    <span className="font-mono text-[9px] text-mute">{idx + 1}</span>
                   )}
                 </div>
-                <span className="text-xs">{label}</span>
+                <span className="font-mono text-[11px]">{label}</span>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Skeleton Result Cards with sliding diagonal stripes */}
+      {/* Skeleton Placeholder Cards */}
       <div className="space-y-4">
         {[1, 2].map((k) => (
-          <div
-            key={k}
-            className="brutal-card p-5 border-3 border-ink bg-card rounded-brutal shadow-brutal space-y-3"
-          >
-            <div className="flex items-center justify-between">
-              <div className="w-48 h-6 rounded border-2 border-ink skeleton-striped" />
-              <div className="w-24 h-6 rounded-full border-2 border-ink skeleton-striped" />
+          <div key={k} className="card p-5 space-y-4 border-rule">
+            <div className="flex justify-between items-center pb-3 border-b border-rule">
+              <div className="w-48 h-4 placeholder-bar" />
+              <div className="w-20 h-4 placeholder-bar" />
             </div>
-            <div className="w-full h-3 rounded-full border-2 border-ink bg-paper" />
-            <div className="grid grid-cols-4 gap-2 pt-2">
-              <div className="h-12 rounded border-2 border-ink skeleton-striped" />
-              <div className="h-12 rounded border-2 border-ink skeleton-striped" />
-              <div className="h-12 rounded border-2 border-ink skeleton-striped" />
-              <div className="h-12 rounded border-2 border-ink skeleton-striped" />
+            <div className="h-2 w-full placeholder-bar" />
+            <div className="grid grid-cols-4 gap-2">
+              {[1, 2, 3, 4].map((j) => (
+                <div key={j} className="h-12 placeholder-bar" />
+              ))}
             </div>
           </div>
         ))}

@@ -1,13 +1,7 @@
 import React from 'react';
 import { Commodity, FoodFormState } from '../lib/types';
-import {
-  Thermometer,
-  Droplets,
-  Calendar,
-  Wind,
-  ArrowRight,
-} from 'lucide-react';
-import { CommoditySticker } from './Illustrations';
+import { ArrowRight, ArrowDownRight } from 'lucide-react';
+import { CommodityPlate, getBotanicalName } from './Illustrations';
 
 interface FoodFormProps {
   formState: FoodFormState;
@@ -16,6 +10,23 @@ interface FoodFormProps {
   onSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
 }
+
+interface FieldRowProps {
+  label: string;
+  unit?: string;
+  children: React.ReactNode;
+  wide?: boolean;
+}
+
+const FieldRow: React.FC<FieldRowProps> = ({ label, unit, children, wide }) => (
+  <div className={`space-y-1.5 ${wide ? 'col-span-2 sm:col-span-3' : ''}`}>
+    <div className="flex justify-between items-baseline">
+      <label className="label text-[10px] text-mute">{label}</label>
+      {unit && <span className="font-mono text-[10px] text-mute">{unit}</span>}
+    </div>
+    {children}
+  </div>
+);
 
 export const FoodForm: React.FC<FoodFormProps> = ({
   formState,
@@ -51,109 +62,83 @@ export const FoodForm: React.FC<FoodFormProps> = ({
     }
   };
 
+  const currentBotanical = getBotanicalName(formState.commodity_id, formState.commodity_name);
+
   return (
-    <form
-      onSubmit={onSubmit}
-      className="brutal-card p-5 sm:p-6 bg-card border-3 border-ink rounded-brutal shadow-brutal space-y-6"
-    >
-      {/* Top Banner with Dynamic Commodity Sticker */}
-      <div className="flex items-center justify-between border-b-3 border-ink pb-4">
-        <div>
-          <h2 className="text-xl font-extrabold text-ink tracking-tight">
-            Food Parameters
-          </h2>
-          <p className="text-xs text-ink font-semibold">
-            Input physical, chemical & respiration values
-          </p>
-        </div>
-        <div className="p-2 bg-paper rounded-xl border-2 border-ink shadow-brutal-sm rotate-2">
-          <CommoditySticker
-            commodityId={formState.commodity_id}
-            isRespiring={formState.is_respiring}
-            className="w-10 h-10"
-          />
-        </div>
+    <form onSubmit={onSubmit} className="card p-6 space-y-6">
+      {/* Header */}
+      <div className="card-header">
+        <span className="label">Specimen Inputs</span>
+        <span className="caption">Parameters</span>
       </div>
 
-      {/* Step 1: Commodity Selection */}
-      <div>
-        <label
-          htmlFor="commodity-select"
-          className="text-xs font-extrabold text-ink uppercase tracking-wider block mb-1.5"
-        >
-          1. Select Commodity from Catalog
-        </label>
-        <select
-          id="commodity-select"
-          value={formState.commodity_id}
-          onChange={(e) => handleCommoditySelect(e.target.value)}
-          className="brutal-input w-full px-3.5 py-2.5 text-sm font-bold text-ink"
-        >
-          <option value="">-- Custom Food Commodity --</option>
-          <optgroup label="Fresh Produce (Respiring)">
-            {commodities
-              .filter((c) => c.category === 'produce')
-              .map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-          </optgroup>
-          <optgroup label="Dry & Shelf-Stable Foods">
-            {commodities
-              .filter((c) => c.category === 'dry')
-              .map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-          </optgroup>
-        </select>
-      </div>
+      {/* Section 1: Commodity Selection & Mode */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="label text-ink">1. Commodity Specimen</span>
+          {currentBotanical && (
+            <span className="font-serif italic text-xs text-mute">{currentBotanical}</span>
+          )}
+        </div>
 
-      {/* Chunky Category Switcher */}
-      <div>
-        <span className="text-xs font-extrabold text-ink uppercase tracking-wider block mb-1.5">
-          Packaging Paradigm Mode:
-        </span>
-        <div className="grid grid-cols-2 gap-2 bg-paper p-1.5 rounded-xl border-3 border-ink">
+        <div className="flex items-center gap-3">
+          <div className="border border-rule rounded p-2 bg-paper flex-shrink-0">
+            <CommodityPlate
+              commodityId={formState.commodity_id}
+              isRespiring={formState.is_respiring}
+              className="w-7 h-7"
+            />
+          </div>
+          <div className="flex-1">
+            <select
+              id="commodity-select"
+              value={formState.commodity_id}
+              onChange={(e) => handleCommoditySelect(e.target.value)}
+              className="field field-select text-xs font-mono"
+            >
+              <option value="">— Custom Specification —</option>
+              <optgroup label="Fresh Produce (Respiring)">
+                {commodities
+                  .filter((c) => c.category === 'produce')
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+              </optgroup>
+              <optgroup label="Dry & Shelf-Stable Foods">
+                {commodities
+                  .filter((c) => c.category === 'dry')
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        {/* Segmented Control (Mode) */}
+        <div className="seg-control mt-2" role="group" aria-label="Commodity category">
           <button
             type="button"
             onClick={() => onChange({ is_respiring: false, category: 'dry' })}
-            className={`py-2 px-3 rounded-lg text-xs font-extrabold transition-all border-2 border-ink ${
-              !formState.is_respiring
-                ? 'bg-sun shadow-brutal-sm'
-                : 'bg-card text-ink opacity-70 hover:opacity-100'
-            }`}
+            className={`seg-btn ${!formState.is_respiring ? 'active' : ''}`}
           >
-            Dry & Processed Food
+            Dry / Processed
           </button>
           <button
             type="button"
             onClick={() => onChange({ is_respiring: true, category: 'produce' })}
-            className={`py-2 px-3 rounded-lg text-xs font-extrabold transition-all border-2 border-ink ${
-              formState.is_respiring
-                ? 'bg-green shadow-brutal-sm'
-                : 'bg-card text-ink opacity-70 hover:opacity-100'
-            }`}
+            className={`seg-btn ${formState.is_respiring ? 'active' : ''}`}
           >
-            Fresh Respiring Produce
+            Fresh Produce
           </button>
         </div>
       </div>
 
-      {/* Step 2: Food Properties */}
-      <div className="space-y-3">
-        <span className="text-xs font-extrabold text-ink uppercase tracking-wider block">
-          2. Intrinsic Food Properties
-        </span>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {/* Moisture */}
-          <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-            <label className="text-[10px] font-extrabold uppercase text-ink block mb-1">
-              Moisture (%)
-            </label>
+      {/* Section 2: Intrinsic Chemical Properties */}
+      <div className="space-y-3 pt-3 border-t border-rule">
+        <span className="label text-ink">2. Composition & Water Activity</span>
+        <div className="grid grid-cols-3 gap-2.5">
+          <FieldRow label="Moisture" unit="% w/w">
             <input
               type="number"
               step="0.1"
@@ -161,15 +146,10 @@ export const FoodForm: React.FC<FoodFormProps> = ({
               max="100"
               value={formState.moisture}
               onChange={(e) => onChange({ moisture: parseFloat(e.target.value) || 0 })}
-              className="brutal-input w-full px-2 py-1 text-sm font-mono font-bold text-ink"
+              className="field text-xs font-mono"
             />
-          </div>
-
-          {/* Fat / Oil */}
-          <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-            <label className="text-[10px] font-extrabold uppercase text-ink block mb-1">
-              Fat / Oil (%)
-            </label>
+          </FieldRow>
+          <FieldRow label="Lipids / Fat" unit="% w/w">
             <input
               type="number"
               step="0.1"
@@ -177,165 +157,126 @@ export const FoodForm: React.FC<FoodFormProps> = ({
               max="100"
               value={formState.fat}
               onChange={(e) => onChange({ fat: parseFloat(e.target.value) || 0 })}
-              className="brutal-input w-full px-2 py-1 text-sm font-mono font-bold text-ink"
+              className="field text-xs font-mono"
             />
-          </div>
-
-          {/* pH */}
-          <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm col-span-2 sm:col-span-1">
-            <label className="text-[10px] font-extrabold uppercase text-ink block mb-1">
-              Food pH Level
-            </label>
+          </FieldRow>
+          <FieldRow label="pH Level" unit="pH">
             <input
               type="number"
               step="0.1"
               min="1"
               max="14"
               value={formState.ph}
-              onChange={(e) => onChange({ ph: parseFloat(e.target.value) || 7.0 })}
-              className="brutal-input w-full px-2 py-1 text-sm font-mono font-bold text-ink"
+              onChange={(e) => onChange({ ph: parseFloat(e.target.value) || 7 })}
+              className="field text-xs font-mono"
             />
-          </div>
+          </FieldRow>
         </div>
       </div>
 
-      {/* Step 3: Respiration (Only when produce) */}
+      {/* Section 3: Respiration Parameters (Only for Produce) */}
       {formState.is_respiring && (
-        <div className="p-4 bg-green/20 rounded-xl border-3 border-ink space-y-3 shadow-brutal-sm">
-          <div className="flex items-center space-x-2">
-            <Wind className="w-4 h-4 text-ink" />
-            <h4 className="text-xs font-extrabold uppercase tracking-wide text-ink">
-              Produce Biological Respiration (MAP)
-            </h4>
+        <div className="space-y-3 pt-3 border-t border-rule bg-wash/30 p-3 rounded border">
+          <div className="flex items-center gap-1.5">
+            <ArrowDownRight className="w-3.5 h-3.5 text-ink" />
+            <span className="label text-ink">3. Respiration Kinetics</span>
           </div>
-
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div>
-              <label className="text-[10px] font-extrabold text-ink block mb-1">
-                Respiration Rate (mL/kg·h)
-              </label>
+          <div className="grid grid-cols-2 gap-2.5">
+            <FieldRow label="Base r_O₂" unit="mL / kg·h">
               <input
                 type="number"
                 step="0.5"
                 value={formState.resp_o2}
                 onChange={(e) => onChange({ resp_o2: parseFloat(e.target.value) || 0 })}
-                className="brutal-input w-full px-2 py-1 font-mono font-bold text-ink"
+                className="field text-xs font-mono"
               />
-            </div>
-
-            <div>
-              <label className="text-[10px] font-extrabold text-ink block mb-1">
-                Target Internal O₂ (%)
-              </label>
+            </FieldRow>
+            <FieldRow label="Target O₂ Zone" unit="%">
               <input
                 type="number"
                 step="0.5"
                 min="1"
                 max="15"
                 value={formState.o2_target}
-                onChange={(e) => onChange({ o2_target: parseFloat(e.target.value) || 4.0 })}
-                className="brutal-input w-full px-2 py-1 font-mono font-bold text-ink"
+                onChange={(e) => onChange({ o2_target: parseFloat(e.target.value) || 4 })}
+                className="field text-xs font-mono"
               />
-            </div>
-
-            <div>
-              <label className="text-[10px] font-extrabold text-ink block mb-1">
-                Max CO₂ Tolerance (%)
-              </label>
+            </FieldRow>
+            <FieldRow label="Max CO₂ Tolerance" unit="%">
               <input
                 type="number"
                 step="0.5"
                 min="1"
                 max="25"
                 value={formState.co2_tolerance}
-                onChange={(e) => onChange({ co2_tolerance: parseFloat(e.target.value) || 5.0 })}
-                className="brutal-input w-full px-2 py-1 font-mono font-bold text-ink"
+                onChange={(e) => onChange({ co2_tolerance: parseFloat(e.target.value) || 5 })}
+                className="field text-xs font-mono"
               />
-            </div>
-
-            <div>
-              <label className="text-[10px] font-extrabold text-ink block mb-1">
-                Sensitivity Q10 Factor
-              </label>
+            </FieldRow>
+            <FieldRow label="Q₁₀ Temperature Coeff." unit="ratio">
               <input
                 type="number"
                 step="0.1"
                 min="1"
                 max="3"
                 value={formState.q10}
-                onChange={(e) => onChange({ q10: parseFloat(e.target.value) || 2.0 })}
-                className="brutal-input w-full px-2 py-1 font-mono font-bold text-ink"
+                onChange={(e) => onChange({ q10: parseFloat(e.target.value) || 2 })}
+                className="field text-xs font-mono"
               />
-            </div>
+            </FieldRow>
           </div>
         </div>
       )}
 
-      {/* Step 4: Storage & Shelf Life */}
-      <div className="space-y-3">
-        <span className="text-xs font-extrabold text-ink uppercase tracking-wider block">
-          3. Storage Conditions & Target Shelf Life
+      {/* Section 4: Storage & Ambient Conditions */}
+      <div className="space-y-3 pt-3 border-t border-rule">
+        <span className="label text-ink">
+          {formState.is_respiring ? '4. Storage & Logistics' : '3. Storage & Shelf Life'}
         </span>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {/* Target Shelf Life */}
-          <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-            <label className="text-[10px] font-extrabold uppercase text-ink block mb-1 flex items-center space-x-1">
-              <Calendar className="w-3 h-3" />
-              <span>Shelf Life (Days)</span>
-            </label>
+        <div className="grid grid-cols-3 gap-2.5">
+          <FieldRow label="Target Life" unit="days">
             <input
               type="number"
               min="1"
               max="1000"
               value={formState.shelf_life_days}
               onChange={(e) => onChange({ shelf_life_days: parseInt(e.target.value) || 1 })}
-              className="brutal-input w-full px-2 py-1 text-sm font-mono font-bold text-ink"
+              className="field text-xs font-mono"
             />
-          </div>
-
-          {/* Temperature */}
-          <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-            <label className="text-[10px] font-extrabold uppercase text-ink block mb-1 flex items-center space-x-1">
-              <Thermometer className="w-3 h-3" />
-              <span>Temp (°C)</span>
-            </label>
+          </FieldRow>
+          <FieldRow label="Storage Temp" unit="°C">
             <input
               type="number"
               step="1"
               value={formState.temp_c}
               onChange={(e) => onChange({ temp_c: parseFloat(e.target.value) || 0 })}
-              className="brutal-input w-full px-2 py-1 text-sm font-mono font-bold text-ink"
+              className="field text-xs font-mono"
             />
-          </div>
-
-          {/* Humidity */}
-          <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm col-span-2 sm:col-span-1">
-            <label className="text-[10px] font-extrabold uppercase text-ink block mb-1 flex items-center space-x-1">
-              <Droplets className="w-3 h-3" />
-              <span>Humidity (% RH)</span>
-            </label>
+          </FieldRow>
+          <FieldRow label="Ambient RH" unit="%">
             <input
               type="number"
               min="10"
               max="100"
               value={formState.humidity_rh}
               onChange={(e) => onChange({ humidity_rh: parseFloat(e.target.value) || 50 })}
-              className="brutal-input w-full px-2 py-1 text-sm font-mono font-bold text-ink"
+              className="field text-xs font-mono"
             />
-          </div>
+          </FieldRow>
         </div>
       </div>
 
-      {/* Submit Action Button */}
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="brutal-btn w-full py-3.5 px-4 text-base font-extrabold text-ink bg-green flex items-center justify-center space-x-2 disabled:opacity-50"
-      >
-        <span>Recommend Best Packaging</span>
-        <ArrowRight className="w-5 h-5 text-ink" strokeWidth={3} />
-      </button>
+      {/* Submit Button */}
+      <div className="pt-2">
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="btn-primary w-full py-2.5 text-xs"
+        >
+          <span>Calculate Recommendations</span>
+          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+        </button>
+      </div>
     </form>
   );
 };

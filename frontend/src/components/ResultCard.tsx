@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Recommendation } from '../lib/types';
 import {
-  HelpCircle,
   ChevronDown,
   ChevronUp,
   ExternalLink,
-  Leaf,
-  Recycle,
+  Check,
+  AlertCircle,
+  X,
   BookOpen,
 } from 'lucide-react';
 import { FilmLayerStack } from './Illustrations';
@@ -14,226 +14,205 @@ import { FilmLayerStack } from './Illustrations';
 interface ResultCardProps {
   rank: number;
   recommendation: Recommendation;
+  isFailing?: boolean;
 }
 
 export const ResultCard: React.FC<ResultCardProps> = ({
   rank,
   recommendation,
+  isFailing = false,
 }) => {
-  const [showExplanation, setShowExplanation] = useState(rank === 1);
+  const [showExplanation, setShowExplanation] = useState(rank === 1 && !isFailing);
 
-  // FitBar color based on score thresholds: >70 green, 40-70 sun, <40 tomato
-  const getBarColor = (score: number) => {
-    if (score >= 70) return 'bg-green';
-    if (score >= 40) return 'bg-sun';
-    return 'bg-tomato';
-  };
+  const isPass = recommendation.fit_score >= 70 && !isFailing;
+  const isMarginal = recommendation.fit_score >= 40 && recommendation.fit_score < 70 && !isFailing;
 
-  const getRankBadgeColor = (r: number) => {
-    if (r === 1) return 'bg-sun';
-    if (r === 2) return 'bg-sky';
-    return 'bg-lilac';
-  };
+  const fitFillClass = isPass
+    ? 'fit-fill--pass'
+    : isMarginal
+    ? 'fit-fill--marginal'
+    : '';
+
+  const fitStatusText = isPass
+    ? 'Meets targets'
+    : isMarginal
+    ? 'Partial fit'
+    : 'Fails limit';
+
+  const FitIcon = isPass ? Check : isMarginal ? AlertCircle : X;
 
   return (
-    <div className="brutal-card p-5 sm:p-6 bg-card border-3 border-ink rounded-brutal shadow-brutal mb-5 transition-all reveal">
-      {/* Top Header Row with Rank Sticker */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b-3 border-ink pb-4">
-        <div className="flex items-start space-x-3.5">
-          {/* Rank Sticker */}
-          <div
-            className={`w-11 h-11 rounded-full ${getRankBadgeColor(
-              rank
-            )} border-3 border-ink shadow-brutal-sm flex items-center justify-center font-extrabold text-ink text-base -rotate-6 flex-shrink-0`}
-          >
-            #{rank}
-          </div>
+    <div
+      className={`card card--interactive ${
+        rank === 1 && !isFailing ? 'card--framed' : ''
+      } mb-4 reveal in`}
+    >
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-3 border-b border-rule">
+        <div className="flex items-baseline gap-3">
+          {/* Rank marker */}
+          <span className="font-serif italic text-base text-ink font-medium flex-shrink-0">
+            {isFailing ? '—' : `No. ${rank}`}
+          </span>
 
           <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h4 className="text-lg sm:text-xl font-extrabold text-ink">
-                {recommendation.material_name}
-              </h4>
-
-              {/* Eco & Data Tags */}
-              {recommendation.biodegradable && (
-                <span className="inline-flex items-center space-x-1 text-[11px] font-extrabold bg-green text-ink px-2 py-0.5 rounded border-2 border-ink shadow-brutal-sm">
-                  <Leaf className="w-3 h-3 text-ink" />
-                  <span>Compostable</span>
-                </span>
-              )}
-              {recommendation.recyclable && (
-                <span className="inline-flex items-center space-x-1 text-[11px] font-extrabold bg-sky text-ink px-2 py-0.5 rounded border-2 border-ink shadow-brutal-sm">
-                  <Recycle className="w-3 h-3 text-ink" />
-                  <span>Recyclable</span>
-                </span>
-              )}
-              <span
-                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded border-2 border-ink shadow-brutal-sm ${
-                  recommendation.estimated ? 'bg-sun text-ink' : 'bg-paper text-ink'
-                }`}
-              >
-                {recommendation.estimated ? 'Data: Estimated' : 'Data: Sourced'}
-              </span>
-            </div>
-
-            <p className="text-xs text-ink/80 font-medium mt-1">
-              {recommendation.mechanical_strength} • {recommendation.seal_type}
+            <h4 className="font-serif text-lg font-medium text-ink tracking-tight">
+              {recommendation.material_name}
+            </h4>
+            <p className="text-xs text-mute font-mono mt-0.5">
+              {recommendation.thickness_range_um} · {recommendation.seal_type}
             </p>
           </div>
         </div>
 
-        {/* Fit Score & Status */}
-        <div className="flex sm:flex-col items-end justify-between sm:justify-start gap-1">
-          <span className="text-xs font-extrabold text-ink font-mono bg-paper px-2.5 py-1 rounded border-2 border-ink shadow-brutal-sm">
-            {recommendation.fit_status}
+        {/* Badges */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {recommendation.biodegradable && (
+            <span className="badge badge--outline">
+              Compostable
+            </span>
+          )}
+          {recommendation.recyclable && (
+            <span className="badge badge--outline">
+              Recyclable
+            </span>
+          )}
+          <span
+            className={`badge ${
+              recommendation.estimated ? 'badge--estimated' : 'badge--sourced'
+            }`}
+          >
+            {recommendation.estimated ? 'Estimated' : 'Sourced'}
           </span>
         </div>
       </div>
 
-      {/* Visual Film Layer Stack */}
-      <FilmLayerStack structure={recommendation.structure} />
+      {/* Body Content */}
+      <div className="pt-4 space-y-4">
+        {/* Film Layer Cross-Section */}
+        <FilmLayerStack structure={recommendation.structure} />
 
-      {/* FitBar with text label directly on track */}
-      <div className="my-3">
-        <div className="flex justify-between items-center text-xs font-extrabold text-ink uppercase tracking-wider mb-1">
-          <span>Barrier Compliance Fit:</span>
-          <span className="font-mono">{recommendation.fit_score}% FIT</span>
-        </div>
-        <div className="w-full h-5 bg-paper rounded-full border-3 border-ink overflow-hidden relative shadow-brutal-sm">
-          <div
-            className={`h-full border-r-3 border-ink transition-all duration-500 flex items-center justify-end pr-2 text-[10px] font-extrabold font-mono text-ink ${getBarColor(
-              recommendation.fit_score
-            )}`}
-            style={{ width: `${Math.max(12, recommendation.fit_score)}%` }}
-          >
-            {recommendation.fit_score}%
+        {/* Fit Indicator */}
+        <div className="space-y-1.5">
+          <div className="flex justify-between items-center text-xs">
+            <div className="flex items-center gap-1.5">
+              <FitIcon className="w-3.5 h-3.5 text-ink" strokeWidth={2} aria-hidden="true" />
+              <span className="label text-[10px] text-ink">{fitStatusText}</span>
+            </div>
+            <span className="font-mono text-xs font-medium text-ink">
+              {recommendation.fit_score}% Compliance
+            </span>
+          </div>
+
+          <div className="fit-track" role="progressbar" aria-valuenow={recommendation.fit_score} aria-valuemin={0} aria-valuemax={100}>
+            <div
+              className={fitFillClass}
+              style={{ width: `${Math.max(0, Math.min(100, recommendation.fit_score))}%` }}
+            />
           </div>
         </div>
-      </div>
 
-      {/* Specs Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-3 text-xs">
-        <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-          <span className="text-[10px] font-extrabold uppercase text-ink/80 block">
-            Oxygen Trans. (OTR)
-          </span>
-          <span className="font-mono font-extrabold text-sm text-ink block">
-            {recommendation.offered_otr.toLocaleString()}
-          </span>
-          <span className="text-[9px] text-ink/70 font-mono">mL/m²·day·atm</span>
+        {/* Specs Table / Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 border border-rule rounded p-2.5 bg-paper/40 text-xs">
+          <div>
+            <span className="label text-[9px] text-mute block">Offered OTR</span>
+            <span className="font-mono font-medium text-ink block mt-0.5">
+              {recommendation.offered_otr.toLocaleString()}
+            </span>
+            <span className="text-[10px] font-mono text-mute">mL / m²·d·atm</span>
+          </div>
+          <div>
+            <span className="label text-[9px] text-mute block">Offered WVTR</span>
+            <span className="font-mono font-medium text-ink block mt-0.5">
+              {recommendation.offered_wvtr.toLocaleString()}
+            </span>
+            <span className="text-[10px] font-mono text-mute">g / m²·day</span>
+          </div>
+          <div>
+            <span className="label text-[9px] text-mute block">Mechanical Integrity</span>
+            <span className="font-mono font-medium text-ink block mt-0.5">
+              {recommendation.mechanical_strength}
+            </span>
+            <span className="text-[10px] font-mono text-mute">{recommendation.cost_tier} cost</span>
+          </div>
+          <div>
+            <span className="label text-[9px] text-mute block">Substrate Type</span>
+            <span className="font-mono font-medium text-ink block mt-0.5 truncate">
+              {recommendation.breathable ? 'Breathable Film' : 'Barrier Laminate'}
+            </span>
+            <span className="text-[10px] font-mono text-mute">{recommendation.seal_type}</span>
+          </div>
         </div>
 
-        <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-          <span className="text-[10px] font-extrabold uppercase text-ink/80 block">
-            Water Vapour (WVTR)
-          </span>
-          <span className="font-mono font-extrabold text-sm text-ink block">
-            {recommendation.offered_wvtr.toLocaleString()}
-          </span>
-          <span className="text-[9px] text-ink/70 font-mono">g/m²·day</span>
-        </div>
-
-        <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-          <span className="text-[10px] font-extrabold uppercase text-ink/80 block">
-            Thickness Range
-          </span>
-          <span className="font-mono font-extrabold text-sm text-ink block">
-            {recommendation.thickness_range_um}
-          </span>
-          <span className="text-[9px] text-ink/70 font-mono">gauge</span>
-        </div>
-
-        <div className="bg-paper p-2.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-          <span className="text-[10px] font-extrabold uppercase text-ink/80 block">
-            Cost & Substrate
-          </span>
-          <span className="font-extrabold text-sm text-ink block truncate">
-            {recommendation.cost_tier} Cost
-          </span>
-          <span className="text-[9px] text-ink/70 font-mono">
-            {recommendation.breathable ? 'Breathable MAP' : 'Barrier Laminate'}
-          </span>
-        </div>
-      </div>
-
-      {/* Accordion Toggle */}
-      <div className="pt-2 flex items-center justify-between border-t-2 border-ink">
-        <button
-          type="button"
-          onClick={() => setShowExplanation(!showExplanation)}
-          className="brutal-btn px-3 py-1 text-xs flex items-center space-x-1.5 bg-paper hover:bg-sun"
-        >
-          <HelpCircle className="w-3.5 h-3.5 text-ink" />
-          <span>{showExplanation ? 'Hide Reasoning' : 'Why this material?'}</span>
-          {showExplanation ? (
-            <ChevronUp className="w-3.5 h-3.5 text-ink" />
-          ) : (
-            <ChevronDown className="w-3.5 h-3.5 text-ink" />
-          )}
-        </button>
-
-        {recommendation.source?.url && (
-          <a
-            href={recommendation.source.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center space-x-1 text-xs font-bold text-ink underline hover:text-sky transition-colors"
+        {/* Accordion Toggle */}
+        <div className="flex items-center justify-between pt-1 border-t border-rule/60">
+          <button
+            type="button"
+            onClick={() => setShowExplanation(!showExplanation)}
+            className="btn-secondary text-xs"
           >
-            <span>Source Reference</span>
-            <ExternalLink className="w-3 h-3 text-ink" />
-          </a>
-        )}
-      </div>
+            <span>{showExplanation ? 'Hide engineering rationale' : 'Why this material?'}</span>
+            {showExplanation ? (
+              <ChevronUp className="w-3.5 h-3.5" aria-hidden="true" />
+            ) : (
+              <ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />
+            )}
+          </button>
 
-      {/* Expandable Explanation Panel */}
-      {showExplanation && (
-        <div className="mt-3 p-4 bg-paper rounded-xl border-2 border-ink text-xs space-y-3 shadow-brutal-sm">
-          {recommendation.explanation?.summary && (
-            <div className="p-3 bg-card rounded-lg border-2 border-ink">
-              <span className="font-extrabold text-ink uppercase tracking-wide block mb-1">
-                Plain-Language Engineering Rationale:
-              </span>
-              <p className="text-ink leading-relaxed font-medium">
-                {recommendation.explanation.summary}
-              </p>
-            </div>
+          {recommendation.source?.url && (
+            <a
+              href={recommendation.source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-ink-2 hover:text-ink flex items-center gap-1 font-mono underline underline-offset-2"
+            >
+              <span>Citation</span>
+              <ExternalLink className="w-3 h-3" aria-hidden="true" />
+            </a>
           )}
+        </div>
 
-          {/* Triggered Rules */}
-          {recommendation.explanation?.rules_fired &&
-            recommendation.explanation.rules_fired.length > 0 && (
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-ink block">
-                  Active Decision Rules:
-                </span>
-                {recommendation.explanation.rules_fired.map((rule) => (
-                  <div
-                    key={rule.rule_id}
-                    className="p-2.5 bg-card rounded-lg border-2 border-ink text-xs"
-                  >
-                    <div className="font-extrabold text-ink flex items-center space-x-1.5">
-                      <span className="w-2 h-2 rounded-full bg-green border border-ink" />
-                      <span>{rule.name}</span>
-                    </div>
-                    <p className="text-ink/80 font-medium mt-0.5">{rule.rationale}</p>
-                  </div>
-                ))}
+        {/* Accordion Body */}
+        {showExplanation && (
+          <div className="border border-rule rounded p-4 space-y-3 bg-paper/60 text-xs">
+            {recommendation.explanation?.summary && (
+              <div>
+                <span className="label text-[10px] text-mute block mb-1">Engineering Rationale</span>
+                <p className="text-ink-2 leading-relaxed font-normal">
+                  {recommendation.explanation.summary}
+                </p>
               </div>
             )}
 
-          {/* Citation */}
-          {recommendation.source && (
-            <div className="flex items-start space-x-2 text-[11px] text-ink font-semibold pt-1 border-t-2 border-ink">
-              <BookOpen className="w-3.5 h-3.5 text-ink flex-shrink-0 mt-0.5" />
+            {recommendation.explanation?.rules_fired && recommendation.explanation.rules_fired.length > 0 && (
               <div>
-                <span>Literature Citation: </span>
-                <span className="text-ink/80">{recommendation.source.title}</span>
+                <span className="label text-[10px] text-mute block mb-1.5">Governing Rules Fired</span>
+                <div className="space-y-1.5">
+                  {recommendation.explanation.rules_fired.map((rule) => (
+                    <div
+                      key={rule.rule_id}
+                      className="border border-rule/80 rounded px-2.5 py-1.5 bg-card text-xs"
+                    >
+                      <div className="flex items-baseline justify-between font-mono font-medium text-ink">
+                        <span>{rule.name}</span>
+                        <span className="text-[10px] text-mute font-normal">[{rule.rule_id}]</span>
+                      </div>
+                      <p className="text-ink-2 text-[11px] mt-0.5 leading-snug">{rule.rationale}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+
+            {recommendation.source && (
+              <div className="flex items-start gap-2 pt-2 border-t border-rule text-[11px] text-mute">
+                <BookOpen className="w-3.5 h-3.5 text-mute flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <span>Source: {recommendation.source.title}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

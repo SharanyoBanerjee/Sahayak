@@ -27,10 +27,13 @@ Python 3.12, Django, DRF, PostgreSQL. React, Vite, TypeScript, Tailwind. Docker 
 - The two demo cases (tomato-type produce, dry biscuit-type product) must always pass as tests.
 
 ## 4b. UI rules
-- Follow `Design.md` tokens exactly. No new colors, no blur shadows, no gradients.
-- Fonts: Plus Jakarta Sans and JetBrains Mono only.
-- Animate `transform` and `opacity` only, and always honor `prefers-reduced-motion`.
-- No compliance or certification claims in the UI (no "BIS compliant" badges). Only claim what the data supports.
+- Follow `Design.md` (Minimal Vintage, monochrome) exactly. One hue only, no extra colors, no gradients.
+- Fonts: Newsreader (headings), Plus Jakarta Sans (UI), IBM Plex Mono (numbers).
+- Professional tone: no mascots, stickers, tilt, exclamation marks or playful copy.
+- Status never relies on color. Use icon, hatch pattern and text label.
+- Animate `transform`, `opacity` and SVG stroke only. Honor `prefers-reduced-motion`. No animation library.
+- Materials that break a hard limit never rank above ones that meet it.
+- No compliance or certification claims in the UI. Only claim what the data supports.
 - Never show a blank panel while loading.
 
 ## 5. Errors

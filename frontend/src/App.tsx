@@ -5,7 +5,7 @@ import { FoodForm } from './components/FoodForm';
 import { RequirementStrip } from './components/RequirementStrip';
 import { ResultCard } from './components/ResultCard';
 import { EngineStepper } from './components/EngineStepper';
-import { BreathingPackDiagram } from './components/Illustrations';
+import { BreathingPackDiagram, SpecimenTrayIllustration } from './components/Illustrations';
 import { Footer } from './components/Footer';
 import {
   Commodity,
@@ -14,7 +14,7 @@ import {
 } from './lib/types';
 import { PRESET_TOMATO } from './lib/presets';
 import { fetchCommodities, getRecommendations, checkHealth } from './lib/api';
-import { AlertTriangle, Layers } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [formState, setFormState] = useState<FoodFormState>(PRESET_TOMATO);
@@ -25,29 +25,24 @@ export const App: React.FC = () => {
   const [serverHealthy, setServerHealthy] = useState<boolean>(true);
   const [activePreset, setActivePreset] = useState<string | null>('CMD-001');
 
-  // Load initial data
   useEffect(() => {
     const init = async () => {
       const health = await checkHealth();
       setServerHealthy(health.status === 'healthy');
 
       const comms = await fetchCommodities();
-      if (comms.length > 0) {
-        setCommodities(comms);
-      }
+      if (comms.length > 0) setCommodities(comms);
 
-      // Initial run for default tomato preset
+      // Run default preset on load with minimum readable delay
       try {
         setIsLoading(true);
         const res = await getRecommendations(PRESET_TOMATO);
-        // Ensure at least 600ms display for smooth initial feel
         setTimeout(() => {
           setResults(res);
           setIsLoading(false);
-        }, 600);
-      } catch (err: any) {
+        }, 550);
+      } catch {
         setIsLoading(false);
-        console.warn('Initial calculation error:', err);
       }
     };
 
@@ -56,13 +51,9 @@ export const App: React.FC = () => {
 
   const handleFormChange = (updates: Partial<FoodFormState>) => {
     setFormState((prev) => {
-      const next = { ...prev, ...updates };
-      if (updates.commodity_id) {
-        setActivePreset(updates.commodity_id);
-      } else {
-        setActivePreset(null);
-      }
-      return next;
+      if (updates.commodity_id) setActivePreset(updates.commodity_id);
+      else setActivePreset(null);
+      return { ...prev, ...updates };
     });
   };
 
@@ -72,11 +63,11 @@ export const App: React.FC = () => {
     setError(null);
     setIsLoading(true);
 
-    const startTime = Date.now();
+    const t0 = Date.now();
     try {
       const res = await getRecommendations(preset);
-      const elapsed = Date.now() - startTime;
-      const delay = Math.max(0, 650 - elapsed);
+      const elapsed = Date.now() - t0;
+      const delay = Math.max(0, 550 - elapsed);
       setTimeout(() => {
         setResults(res);
         setIsLoading(false);
@@ -92,11 +83,11 @@ export const App: React.FC = () => {
     setError(null);
     setIsLoading(true);
 
-    const startTime = Date.now();
+    const t0 = Date.now();
     try {
       const res = await getRecommendations(formState);
-      const elapsed = Date.now() - startTime;
-      const delay = Math.max(0, 650 - elapsed);
+      const elapsed = Date.now() - t0;
+      const delay = Math.max(0, 550 - elapsed);
       setTimeout(() => {
         setResults(res);
         setIsLoading(false);
@@ -107,33 +98,40 @@ export const App: React.FC = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-paper relative overflow-x-hidden">
-      {/* Parallax Decorative Stickers in Background */}
-      <div className="absolute top-28 left-4 w-8 h-8 rounded-full bg-sun border-2 border-ink opacity-40 -rotate-12 pointer-events-none hidden xl:block" />
-      <div className="absolute top-96 right-6 w-10 h-10 bg-lilac rounded-lg border-2 border-ink opacity-40 rotate-12 pointer-events-none hidden xl:block" />
-      <div className="absolute bottom-40 left-8 w-12 h-12 bg-sky rounded-full border-2 border-ink opacity-30 pointer-events-none hidden xl:block" />
+  // Partition recommendations into passing / compliant vs did not meet requirements
+  const passingRecommendations = results?.recommendations.filter(
+    (r) => r.fit_score >= 40 && r.fit_status !== 'Unsuitable' && r.fit_status !== 'fail'
+  ) ?? [];
 
+  const failingRecommendations = results?.recommendations.filter(
+    (r) => r.fit_score < 40 || r.fit_status === 'Unsuitable' || r.fit_status === 'fail'
+  ) ?? [];
+
+  return (
+    <div className="min-h-screen flex flex-col bg-paper">
       <Header serverHealthy={serverHealthy} />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 z-10">
-        {/* Error Alert */}
+      <main className="flex-1 max-w-[1240px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Error notification */}
         {error && (
-          <div className="mb-6 p-4 bg-tomato text-ink border-3 border-ink rounded-brutal shadow-brutal flex items-start space-x-3 text-sm font-extrabold">
-            <AlertTriangle className="w-6 h-6 text-ink flex-shrink-0 mt-0.5" />
+          <div
+            className="card mb-6 p-4 border-ink flex items-start gap-3 text-xs text-ink"
+            role="alert"
+          >
+            <AlertCircle className="w-4 h-4 text-ink flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
-              <span className="block text-base">Error Notice:</span>
-              <p className="font-semibold text-xs mt-0.5">{error}</p>
+              <span className="label text-ink block mb-0.5">Evaluation Error</span>
+              <p className="text-ink-2">{error}</p>
             </div>
           </div>
         )}
 
-        {/* Instant Demo Presets Bar */}
+        {/* Reference cases */}
         <PresetBar onSelectPreset={handleSelectPreset} activePreset={activePreset} />
 
-        {/* Main 2-Column Neo-Brutalist Layout */}
+        {/* Main 12-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left Column: Food Parameters Form (Sticky on Desktop) */}
+          {/* Left Column: Form (Sticky on desktop) */}
           <div className="lg:col-span-5 lg:sticky lg:top-20">
             <FoodForm
               formState={formState}
@@ -144,19 +142,19 @@ export const App: React.FC = () => {
             />
           </div>
 
-          {/* Right Column: Engine Targets & Recommendations */}
+          {/* Right Column: Calculations & Results */}
           <div className="lg:col-span-7 space-y-6">
             {isLoading ? (
               <EngineStepper />
             ) : results ? (
               <div className="space-y-6">
-                {/* Derived Barrier Requirement Strip (Sticky under header) */}
+                {/* Derived requirements strip */}
                 <RequirementStrip
                   requirements={results.requirements_derived}
                   isProduce={results.is_produce}
                 />
 
-                {/* Hero Breathing Pack Diagram (Shown for produce cases) */}
+                {/* Hero Gas exchange schematic (Fig. 1) — produce only */}
                 {results.is_produce && (
                   <BreathingPackDiagram
                     targetOtr={results.requirements_derived.target_otr_ml_m2_day_atm}
@@ -165,40 +163,73 @@ export const App: React.FC = () => {
                   />
                 )}
 
-                {/* Recommendations Section Header */}
-                <div className="flex items-center justify-between border-b-3 border-ink pb-2">
+                {/* Results Section Header */}
+                <div className="flex items-baseline justify-between pb-2 border-b border-rule">
                   <div>
-                    <h3 className="text-xl font-extrabold text-ink tracking-tight">
+                    <h3 className="font-serif text-xl font-medium text-ink tracking-tight">
                       Recommended Packaging Substrates
                     </h3>
-                    <p className="text-xs text-ink font-semibold">
-                      Ranked by barrier matching, mechanical protection, and seal integrity
+                    <p className="text-xs text-mute mt-0.5">
+                      Screened against equilibrium transmission equations and certified substrate limits
                     </p>
                   </div>
-                  <span className="bg-sun text-ink font-mono font-bold text-xs px-3 py-1 rounded-lg border-2 border-ink shadow-brutal-sm">
-                    TOP {results.recommendations.length} MATCHES
+                  <span className="font-mono text-xs text-mute">
+                    {passingRecommendations.length} viable of {results.total_candidates_evaluated || results.recommendations.length}
                   </span>
                 </div>
 
-                {/* Result Cards */}
-                <div>
-                  {results.recommendations.map((rec, index) => (
+                {/* Passing Result Cards */}
+                <div className="space-y-4">
+                  {passingRecommendations.map((rec, idx) => (
                     <ResultCard
                       key={rec.material_id}
-                      rank={index + 1}
+                      rank={idx + 1}
                       recommendation={rec}
                     />
                   ))}
                 </div>
+
+                {/* Failing / Unmet Requirements Section */}
+                {failingRecommendations.length > 0 && (
+                  <div className="pt-6 border-t border-rule space-y-4">
+                    <div className="flex items-baseline justify-between">
+                      <div>
+                        <h4 className="font-serif text-base font-medium text-mute tracking-tight">
+                          Did Not Meet Requirements
+                        </h4>
+                        <p className="text-xs text-mute/80">
+                          Substrates violating hard barrier limits (excessive OTR/WVTR or insufficient gas permeability)
+                        </p>
+                      </div>
+                      <span className="font-mono text-xs text-mute">
+                        {failingRecommendations.length} excluded
+                      </span>
+                    </div>
+
+                    <div className="space-y-3 opacity-80">
+                      {failingRecommendations.map((rec, idx) => (
+                        <ResultCard
+                          key={rec.material_id}
+                          rank={passingRecommendations.length + idx + 1}
+                          recommendation={rec}
+                          isFailing={true}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
-              <div className="brutal-card p-10 bg-card border-3 border-ink rounded-brutal shadow-brutal text-center space-y-3">
-                <Layers className="w-12 h-12 text-ink mx-auto" />
-                <h4 className="text-lg font-extrabold text-ink">
-                  Ready to Calculate
+              /* Empty state */
+              <div className="card p-12 text-center space-y-3">
+                <div className="flex justify-center" aria-hidden="true">
+                  <SpecimenTrayIllustration className="w-16 h-16" />
+                </div>
+                <h4 className="font-serif text-lg font-medium text-ink tracking-tight">
+                  Awaiting Specimen Input
                 </h4>
-                <p className="text-xs text-ink/80 font-medium max-w-md mx-auto">
-                  Pick a commodity on the left or select one of the demo presets above to see the packaging recommendations.
+                <p className="text-xs text-mute max-w-sm mx-auto leading-relaxed">
+                  Select a standard reference case above or customize chemical and physical properties on the left to compute transmission targets.
                 </p>
               </div>
             )}

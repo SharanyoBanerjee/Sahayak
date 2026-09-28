@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link2 } from 'lucide-react';
-import { MascotBox } from './Illustrations';
 
 interface HeaderProps {
   serverHealthy: boolean;
@@ -8,44 +7,35 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ serverHealthy }) => {
   return (
-    <header className="bg-card border-b-3 border-ink sticky top-0 z-30 shadow-brutal-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
-        {/* Logo Sticker & Brand */}
-        <div className="flex items-center space-x-3.5">
-          <div className="p-1 bg-sun rounded-xl border-3 border-ink shadow-brutal-sm">
-            <MascotBox className="w-9 h-9" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
-                Sahayak
-              </h1>
-              <span className="bg-lilac text-ink text-xs font-extrabold px-2 py-0.5 rounded border-2 border-ink shadow-brutal-sm rotate-1">
-                SIH236
-              </span>
-            </div>
-            <p className="text-xs text-ink font-semibold hidden sm:block">
-              Food Packaging Recommender • Ministry of Food Processing Industries
-            </p>
-          </div>
+    <header className="bg-paper border-b border-rule sticky top-0 z-30">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {/* Wordmark */}
+        <div className="flex items-baseline gap-3">
+          <h1 className="font-serif text-2xl font-medium text-ink tracking-tight">
+            Sahayak
+          </h1>
+          <span className="text-xs text-mute font-normal hidden sm:inline border-l border-rule pl-3">
+            Food Packaging Recommender · Ministry of Food Processing Industries
+          </span>
         </div>
 
-        {/* Status Pill & Integrity Tag */}
-        <div className="flex items-center space-x-3">
-          <div className="hidden md:flex items-center space-x-1.5 text-xs font-extrabold text-ink bg-sky px-3 py-1.5 rounded-lg border-2 border-ink shadow-brutal-sm">
-            <Link2 className="w-3.5 h-3.5 text-ink" />
+        {/* Status bar */}
+        <div className="flex items-center gap-4 sm:gap-6 text-xs">
+          {/* Source note */}
+          <div className="hidden md:flex items-center gap-1.5 text-mute font-medium">
+            <Link2 className="w-3.5 h-3.5 text-mute" aria-hidden="true" />
             <span>Every value linked to a source</span>
           </div>
 
-          <div className="flex items-center space-x-1.5 text-xs font-mono font-bold bg-paper px-3 py-1.5 rounded-lg border-2 border-ink shadow-brutal-sm">
+          {/* Engine status */}
+          <div className="flex items-center gap-2 text-ink-2 font-mono text-xs">
             <span
-              className={`w-2.5 h-2.5 rounded-full border border-ink ${
-                serverHealthy ? 'bg-green' : 'bg-tomato animate-pulse'
+              className={`w-2 h-2 rounded-full ${
+                serverHealthy ? 'bg-ink' : 'border border-mute'
               }`}
+              aria-hidden="true"
             />
-            <span className="text-ink">
-              {serverHealthy ? 'ENGINE READY' : 'OFFLINE'}
-            </span>
+            <span>{serverHealthy ? 'Engine Ready' : 'Engine Offline'}</span>
           </div>
         </div>
       </div>

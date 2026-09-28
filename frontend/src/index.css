@@ -1,165 +1,443 @@
+/* ============================================================
+   Sahayak — Minimal Vintage, Monochrome Design System
+   Fonts: Newsreader (serif), Plus Jakarta Sans, IBM Plex Mono
+   ============================================================ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
 :root {
-  --ink: #111111;
-  --paper: #FFF8E7;
-  --card: #FFFFFF;
-  --green: #3DDC84;
-  --tomato: #FF5A4E;
-  --sun: #FFD23F;
-  --sky: #6EC5FF;
-  --lilac: #C7A6FF;
-  --border: 3px solid var(--ink);
-  --shadow: 6px 6px 0 var(--ink);
-  --shadow-hover: 9px 9px 0 var(--ink);
-  --radius: 14px;
+  /* One hue — warm sepia, stepped by lightness */
+  --paper:  #F3EEE4;   /* page background */
+  --card:   #FAF7F0;   /* card surface */
+  --wash:   #E9E2D3;   /* subtle fills, zebra stripes */
+  --rule:   #CFC5B3;   /* hairline borders */
+  --mute:   #857A6A;   /* secondary text */
+  --ink-2:  #4A4036;   /* body text */
+  --ink:    #241E18;   /* headings, primary buttons */
+
+  --radius: 4px;
+  --hair:   1px solid var(--rule);
+  --frame:  1px solid var(--ink);
+  --lift:   0 1px 0 var(--rule), 0 8px 20px -14px rgba(36, 30, 24, 0.35);
 }
 
+/* ============================================================
+   BASE
+   ============================================================ */
 @layer base {
+  html {
+    color-scheme: light;
+  }
+
   body {
-    background-color: var(--paper);
-    color: var(--ink);
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink-2);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 500;
     color: var(--ink);
-    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  /* Accessible focus */
+  *:focus {
+    outline: none;
+  }
+  *:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
   }
 }
 
-/* Neo-Brutalist utility classes */
-.brutal-card {
-  background: var(--card);
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
-}
+/* ============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================ */
 
-.brutal-card:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: var(--shadow-hover);
-}
-
-.brutal-btn {
-  background: var(--green);
-  border: var(--border);
-  border-radius: 10px;
-  box-shadow: 4px 4px 0 var(--ink);
-  color: var(--ink);
-  font-weight: 800;
-  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
-}
-
-.brutal-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--ink);
-}
-
-.brutal-btn:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0 0 0 var(--ink);
-}
-
-.brutal-input {
-  background: #FFFFFF;
-  border: var(--border);
-  border-radius: 8px;
-  color: var(--ink);
+/* Section label — 11px uppercase, traced from small caps */
+.label {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11px;
   font-weight: 600;
-  outline: none;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mute);
+  line-height: 1;
 }
 
-.brutal-input:focus {
-  background: var(--sun);
-  outline: 4px solid var(--ink);
+/* Figure / table caption */
+.caption {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  font-variant: small-caps;
+  color: var(--mute);
+  letter-spacing: 0.04em;
 }
 
-/* Skeleton diagonal sliding stripes */
-@keyframes slideStripes {
-  0% { background-position: 0 0; }
-  100% { background-position: 40px 40px; }
+/* Tabular mono numbers */
+.num {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
-.skeleton-striped {
+.num-sm {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   CARD SYSTEM
+   ============================================================ */
+.card {
+  background: var(--card);
+  border: var(--hair);
+  border-radius: var(--radius);
+  box-shadow: var(--lift);
+  padding: 24px;
+  transition: border-color 0.15s ease-out;
+}
+
+/* Double-rule framed card (main result card, hero diagram) */
+.card--framed {
+  border: var(--frame);
+  outline: 1px solid var(--rule);
+  outline-offset: 3px;
+}
+
+/* Interactive card hover — quiet border change, no movement */
+.card--interactive:hover {
+  border-color: var(--ink);
+}
+
+/* Card header rule: label left, hairline, optional tag right */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: var(--hair);
+}
+
+.card-header::after {
+  content: '';
+  flex: 1;
+  height: 0;
+  border-top: var(--hair);
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+.field {
+  background: var(--card);
+  border: var(--hair);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 10px;
+  width: 100%;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  appearance: none;
+}
+
+.field:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px var(--rule);
+}
+
+.field-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%234A4036' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: var(--ink-2);
+  border-color: var(--ink-2);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-secondary:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: var(--wash);
+}
+
+/* Segmented control (Dry / Fresh) */
+.seg-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.seg-btn {
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  background: transparent;
+  color: var(--mute);
+  border: none;
+  text-align: center;
+}
+
+.seg-btn + .seg-btn {
+  border-left: 1px solid var(--ink);
+}
+
+.seg-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ============================================================
+   BADGE (Monochrome only)
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 2px;
+  line-height: 1.4;
+}
+
+.badge--sourced {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.badge--estimated {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+}
+
+.badge--outline {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+}
+
+/* ============================================================
+   FIT INDICATOR (No color — Shape + Hatch + Label)
+   ============================================================ */
+.fit-track {
+  height: 8px;
+  background: var(--wash);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--rule);
+}
+
+/* Pass: solid ink fill */
+.fit-fill--pass {
+  height: 100%;
+  background: var(--ink);
+  transition: width 0.5s ease-out;
+}
+
+/* Marginal: diagonal hatch fill */
+.fit-fill--marginal {
+  height: 100%;
   background: repeating-linear-gradient(
-    45deg,
-    var(--sun),
-    var(--sun) 15px,
-    #FFFFFF 15px,
-    #FFFFFF 30px
+    -45deg,
+    var(--ink) 0px,
+    var(--ink) 2px,
+    transparent 2px,
+    transparent 6px
   );
-  background-size: 40px 40px;
-  animation: slideStripes 1.2s linear infinite;
+  transition: width 0.5s ease-out;
 }
 
-/* Popping checkmark animation */
-@keyframes popCheck {
-  0% { transform: scale(0); }
-  70% { transform: scale(1.25); }
-  100% { transform: scale(1); }
+/* ============================================================
+   REQUIREMENT TILES (Spec table style)
+   ============================================================ */
+.req-tile-group {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: var(--hair);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card);
 }
 
-.animate-pop-check {
-  animation: popCheck 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+@media (max-width: 640px) {
+  .req-tile-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* Reveal on scroll */
+.req-tile {
+  padding: 14px 16px;
+  background: var(--card);
+  border-right: var(--hair);
+}
+
+.req-tile:last-child {
+  border-right: none;
+}
+
+@media (max-width: 640px) {
+  .req-tile:nth-child(2) { border-right: none; }
+  .req-tile:nth-child(3) { border-top: var(--hair); }
+  .req-tile:nth-child(4) { border-top: var(--hair); border-right: none; }
+}
+
+/* ============================================================
+   LOADING — Progress rule + step list + placeholder bars
+   ============================================================ */
+@keyframes progressRule {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+.progress-rule {
+  height: 1.5px;
+  background: var(--ink);
+  animation: progressRule 0.6s ease-out forwards;
+}
+
+@keyframes placeholderFade {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 0.95; }
+}
+
+.placeholder-bar {
+  background: var(--wash);
+  border-radius: 2px;
+  animation: placeholderFade 1.2s ease-in-out infinite;
+}
+
+/* ============================================================
+   REVEAL ON SCROLL
+   ============================================================ */
 .reveal {
   opacity: 0;
-  transform: translateY(32px) rotate(-0.5deg);
+  transform: translateY(10px);
 }
 
 .reveal.in {
   opacity: 1;
   transform: none;
-  transition: opacity 0.45s cubic-bezier(0.2, 1.4, 0.4, 1), transform 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
 }
 
-/* Gas drift animation for Breathing Pack */
-@keyframes driftIn {
-  0% { transform: translateX(-16px); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateX(8px); opacity: 0; }
+/* SVG Line Drawing */
+.draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 0.7s ease-out forwards;
 }
 
-@keyframes driftOut {
-  0% { transform: translateX(0); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateX(20px); opacity: 0; }
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
 }
 
-.gas-drift-in {
-  animation: driftIn 2.2s infinite ease-in-out;
+/* ============================================================
+   PRINT STYLESHEET
+   ============================================================ */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  .card, .card--framed {
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    outline: none;
+  }
+  header, .no-print {
+    display: none;
+  }
 }
 
-.gas-drift-out {
-  animation: driftOut 2.2s infinite ease-in-out;
-}
-
-/* Mascot bounce */
-@keyframes mascotBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-.mascot-bounce {
-  animation: mascotBounce 2s infinite ease-in-out;
-}
-
-/* Accessibility: Prefers reduced motion */
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal.in {
-    transition: none !important;
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
   }
   * {
-    animation: none !important;
-    transition: none !important;
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
   }
 }

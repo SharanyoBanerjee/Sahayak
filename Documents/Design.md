@@ -1,93 +1,106 @@
-# Design: Sahayak (Neo-Brutalist)
+# Design: Sahayak (Minimal Vintage, Monochrome)
 
 ## 1. Direction
-Card-based neo-brutalism. Thick black outlines, hard offset shadows (zero blur), flat loud colors on a cream page, big bold type. Every block is a card. Every card has a job.
+A technical datasheet, not a toy. Warm paper, one ink color, hairline rules, serif headings, engraving-style line drawings. Think old laboratory handbook or a well-set standards document, rebuilt as a dashboard.
 
-The vibe: a food label crossed with a sticker sheet. Friendly and loud, but the numbers stay readable. Users are farmers and small processors, so illustration does more work than jargon.
+Users are packaging and QA people at companies. Numbers, units and sources come first. Decoration never competes with them.
+
+Three rules:
+1. **One hue.** Everything is a tint or shade of warm ink on paper.
+2. **Quiet.** Hairline borders, no loud fills, no tilt, no stickers.
+3. **Precise.** Aligned grids, tabular numerals, units on every number.
 
 ## 2. Tokens
 ```css
 :root {
-  --ink: #111111;
-  --paper: #FFF8E7;      /* page */
-  --card: #FFFFFF;
-  --green: #3DDC84;      /* good fit, primary action */
-  --tomato: #FF5A4E;     /* poor fit, warnings */
-  --sun: #FFD23F;        /* highlights, medium fit */
-  --sky: #6EC5FF;        /* info, data labels */
-  --lilac: #C7A6FF;      /* badges */
-  --border: 3px solid var(--ink);
-  --shadow: 6px 6px 0 var(--ink);
-  --shadow-hover: 9px 9px 0 var(--ink);
-  --radius: 14px;
+  /* one hue (warm sepia ink), stepped by lightness */
+  --paper:   #F3EEE4;   /* page */
+  --card:    #FAF7F0;   /* cards */
+  --wash:    #E9E2D3;   /* subtle fills, table stripes */
+  --rule:    #CFC5B3;   /* hairlines */
+  --mute:    #857A6A;   /* secondary text */
+  --ink-2:   #4A4036;   /* body text */
+  --ink:     #241E18;   /* headings, primary buttons */
+
+  --radius: 4px;
+  --hair: 1px solid var(--rule);
+  --frame: 1px solid var(--ink);
+  --lift: 0 1px 0 var(--rule), 0 8px 20px -14px rgba(36, 30, 24, .35);
 }
 ```
-Rules: no gradients, no blur shadows, no opacity tricks on borders. Text is always `--ink` on light fills (contrast passes AA).
+No second hue anywhere, including status. Status uses shape and label (section 5). Text on paper or card always uses `--ink-2` or `--ink` (contrast above 7:1).
 
 ## 3. Typography
-Load **Plus Jakarta Sans** (400, 600, 800) and **JetBrains Mono** (500) from Google Fonts. Fallbacks: `system-ui, sans-serif` and `ui-monospace, monospace`.
-
-| Use | Font | Size / weight |
+| Use | Font | Spec |
 |---|---|---|
-| Hero and H1 | Plus Jakarta Sans | 44px / 800, tight leading |
-| H2 | Plus Jakarta Sans | 28px / 800 |
-| Card title | Plus Jakarta Sans | 20px / 800 |
-| Body | Plus Jakarta Sans | 16px / 500 |
-| Labels | Plus Jakarta Sans | 13px / 800, uppercase, +0.04em tracking |
-| Numbers and specs | JetBrains Mono | 500, big (28px+) for key values |
+| Page title, card titles | **Newsreader** (serif) | 500, 28 / 20px, slight negative tracking |
+| UI and body | **Plus Jakarta Sans** | 400 / 500, 15px |
+| Labels | Plus Jakarta Sans | 600, 11px, uppercase, +0.08em tracking |
+| Numbers, units, specs | **IBM Plex Mono** | 500, tabular figures |
 
-## 4. Core components
+Fallbacks: `Georgia, serif`, `system-ui, sans-serif`, `ui-monospace, monospace`.
+
+Big derived numbers (barrier targets) are 30px mono with the unit in 12px `--mute` beneath. Figure and table captions are set in small caps: "Fig. 1  Gas exchange, respiring produce".
+
+## 4. Cards
 ```css
 .card {
   background: var(--card);
-  border: var(--border);
+  border: var(--hair);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  transition: transform .12s, box-shadow .12s;
+  box-shadow: var(--lift);
+  padding: 24px;
 }
-.card:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-hover); }
-.btn:active { transform: translate(6px, 6px); box-shadow: 0 0 0 var(--ink); }
+.card--framed { border: var(--frame); outline: 1px solid var(--rule); outline-offset: 3px; } /* vintage double rule */
+.card__label { font: 600 11px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
 ```
-- **Button:** `--green` fill, ink border, hard shadow. Pressing it "sinks" into the page.
-- **Input:** white, 3px ink border, square-ish (8px radius). Focus: `--sun` background plus a 4px ink outline.
-- **Badge:** pill, 2px border, flat color. Icon plus text, never color alone.
-- **Toggle (Dry / Fresh):** two chunky segments, active one is `--green` with a shadow.
-- **FitBar:** thick (16px) ink-bordered track. Fill: green above 70, sun 40 to 70, tomato below 40. Label sits on the bar ("55.6% FIT").
-- **RequirementStrip:** four number tiles, each a different flat color (green, sun, sky, lilac), mono numbers at 32px.
-- **ResultCard:** rank sticker (#1 in a rotated circle, -6deg), material name, illustration of the structure, spec grid, FitBar, "Why this?" button.
+- Section header inside a card: label on the left, a hairline running to the right edge, small "Fig." or "Table" tag on the right.
+- Use the double-rule frame only on the main result card and the hero diagram. Everything else is a plain hairline card.
+- Hover on interactive cards: border goes `--ink`, no movement.
 
-## 5. Illustration
-Flat SVG, 3px ink outlines, 2 to 3 fill colors per drawing, slightly wobbly is fine. Draw inline so they can animate. Keep each under ~2 KB.
+## 5. Components
+- **Button (primary):** `--ink` fill, `--paper` text, 4px radius, no shadow. Hover: `--ink-2`. Secondary: transparent, 1px ink border.
+- **Input:** `--card` fill, hairline border, mono value, small unit suffix inside on the right. Focus: 1px ink border plus 2px outline in `--rule`.
+- **Segmented control (Dry / Fresh):** two cells sharing one frame, active cell is ink-filled.
+- **Requirement tiles:** four cards in a row: label, big mono number, unit. All the same tone, separated by hairlines, like a spec table.
+- **Fit indicator (no color):**
+  - Bar: 8px track (`--wash`), fill is solid `--ink` for pass.
+  - **Pass:** solid fill, check icon, text "Meets targets"
+  - **Marginal:** fill with diagonal hatching, text "Partial fit"
+  - **Fail:** empty track with a cross icon, text "Fails CO₂ limit"
+  - The percentage always appears as text beside the bar.
+- **Badge:** 1px border, transparent, 11px uppercase label. "SOURCED" solid ink, "ESTIMATED" outlined.
+- **Data table:** hairline rows, zebra with `--wash`, mono numerals right-aligned, units in the header.
+- **Rank marker:** small "No. 1" in serif italic, no circle, no rotation.
 
-1. **Commodity icons.** Tomato, biscuit, chips bag, mango, spinach. Shown in the dropdown and as a big sticker beside the form. Swaps when the commodity changes.
-2. **"Breathing pack" diagram** (the hero visual). A pack with the produce inside. O2 arrows drift in, CO2 arrows drift out. Arrow count and speed follow the derived OTR, so a tight barrier film looks visibly different from a breathable one. This is the demo's best moment.
-3. **Film layer stack.** Each result card shows the structure as stacked colored strips (e.g. PET / metallised layer / PE seal), labelled.
-4. **Empty and error states.** A sad open box for "no film fits", a magnifier over a box for empty results.
-5. **Mascot (optional).** A small smiling box character in the header. Skip it if time is short.
+### Ranking rule (design and engine agree)
+Materials that violate a hard limit (CO₂ tolerance, max OTR, max WVTR) never rank above ones that meet it. Failing materials appear below a divider labelled "Did not meet requirements", each with its reason.
 
-## 6. Loading animations
-Never show a blank panel. On submit:
+## 6. Illustration
+Engraving and technical-plate style. **Single-weight line, 1.25px, ink stroke, no fills** except hatching and stipple for shade. All drawn as inline SVG so strokes can animate.
 
-1. **Engine stepper card.** Four steps tick in one after another, each with a checkmark that pops (scale 0 to 1.2 to 1):
-   - Reading your food
-   - Working out barrier targets
-   - Matching 8 materials
-   - Writing the reasons
-2. **Skeleton result cards.** Same card shape, `--sun` and white diagonal stripes sliding (`background-position` animation, 1s linear loop). Hard shadow stays.
-3. **Bouncing box** in the corner while waiting (3-frame CSS translateY).
-4. Results arrive with the entrance animation from section 7.
+1. **Commodity plates.** A fine line drawing per commodity (tomato, biscuit, chips pouch, mango, leafy greens) with a hatched shadow. Shown small beside the dropdown, with a tiny caption ("Solanum lycopersicum" for the tomato, if you want the botanical touch).
+2. **Gas exchange schematic** (hero figure). A cross-section of a pack: produce drawn as a line plate inside, dimension lines with arrows, labelled O₂ in and CO₂ out. Arrow count and length follow the derived OTR. Captioned "Fig. 1". Labels sit outside the drawing on leader lines, so nothing overlaps the artwork.
+3. **Film cross-section.** Each result shows its structure as stacked hatched layers with labels on leader lines (e.g. PET 12 µm, metallised layer, PE seal 40 µm), drawn to relative thickness.
+4. **Empty and error states.** A single line drawing of an open carton with a caption. No characters.
 
-Minimum display time is 600ms so the stepper is readable even when the API answers instantly. (The engine is fast, so without this the animation flashes past.)
+No mascots, faces, stickers or decorative shapes.
 
-## 7. Scroll and entrance animations
-Use CSS plus one small `IntersectionObserver` hook. No animation library.
+## 7. Motion (restrained)
+Motion explains state changes. It never entertains.
 
-- **Reveal on scroll.** Cards start at `opacity: 0; transform: translateY(32px) rotate(-1deg)`, then snap to rest with a slight overshoot (`cubic-bezier(.2, 1.4, .4, 1)`, 450ms). Stagger siblings by 80ms.
-- **FitBar fill.** Width animates from 0 to its value when the card scrolls into view.
-- **Number count-up.** Barrier targets count up over 700ms when visible.
-- **Sticky RequirementStrip.** Sticks under the header while the user scrolls through results, so the targets stay visible next to each material.
-- **Section headers.** Slide in from the left with a highlighter bar (`--sun`) that wipes across behind the text.
-- **Parallax stickers.** Two or three decorative stickers (star, wheat, circle) drift at different speeds using `transform` only.
+**Loading**
+- On submit, a thin progress rule runs across the top of the results card.
+- A step list under it lights up in order with a hairline tick: "Reading inputs", "Deriving barrier targets", "Screening 8 materials", "Composing rationale". Minimum total 500ms so it's readable.
+- Placeholder cards are hairline outlines with `--wash` bars that fade between 60% and 100% opacity (1.2s ease-in-out, looping).
+- The gas schematic draws itself on load using `stroke-dashoffset` (700ms).
+
+**Scroll and entrance** (CSS plus one `IntersectionObserver` hook, no library)
+- Cards fade in and rise 10px, 300ms `ease-out`, staggered 60ms.
+- Fit bars fill from 0 when visible (500ms).
+- Requirement numbers count up over 500ms when visible.
+- Requirement tiles stay sticky under the header on scroll, so targets remain visible beside each material.
+- Section rules draw left to right as their section enters.
 
 ```ts
 // useReveal.ts
@@ -111,31 +124,39 @@ export function useReveal<T extends HTMLElement>() {
 }
 ```
 ```css
-.reveal { opacity: 0; transform: translateY(32px) rotate(-1deg); }
-.reveal.in { opacity: 1; transform: none;
-  transition: all .45s cubic-bezier(.2, 1.4, .4, 1); }
+.reveal { opacity: 0; transform: translateY(10px); }
+.reveal.in { opacity: 1; transform: none; transition: opacity .3s ease-out, transform .3s ease-out; }
 @media (prefers-reduced-motion: reduce) {
-  .reveal, .reveal.in { transition: none; opacity: 1; transform: none; }
+  .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
   * { animation: none !important; }
 }
 ```
-Animate only `transform` and `opacity` (cheap on phones).
+Animate only `transform`, `opacity` and SVG stroke properties.
 
 ## 8. Layout
-- Max width 1200px, 12-column grid, 24px gaps.
-- Header: full-width ink-bordered bar, logo sticker left, status pill right.
-- Desktop: form card on the left (sticky), results on the right. Under 900px it stacks and the strip becomes horizontal scroll.
-- Presets ("Fresh tomato", "Biscuits") sit as big sticker buttons above the form.
-- Cards may tilt 0.5 to 1deg for personality, but never inputs or tables.
+- Max width 1240px, 12-column grid, 24px gutters, 8px spacing unit.
+- Header: paper background, serif wordmark, a 1px ink rule beneath. Right side: source-linking note and engine status as plain text with a small dot (filled = ready).
+- Two columns on desktop: inputs on the left (sticky), results on the right. Under 960px they stack.
+- Reference cases ("Fresh tomato", "Crisp biscuits") are two quiet text buttons in a slim bar above the form, not big banners.
+- Numbered sections in the form ("1. Commodity", "2. Composition") in small caps.
 
-## 9. Copy and trust
-- Drop the "BIS & FAO Standard Compliant" badge. Nothing in the engine is certified, and a judge who asks will find that out. Use "Every value linked to a source" instead, which is true and checkable.
-- Replace "Thermodynamic & Biological Equilibrium" with "Gas balance for respiring produce".
-- Keep every "Sourced" and "Estimated" tag. They're the honest part.
+## 9. Copy
+Professional and plain. No exclamation marks, no cutesy microcopy.
+- "Contrasting demo cases" becomes "Reference cases"
+- "Breathing Pack" becomes "Gas exchange schematic"
+- Keep "Every value linked to a source" and the SOURCED / ESTIMATED tags. Don't add compliance or certification claims the data can't back.
+- Every number shows its unit. Every result shows why it passed or failed.
 
 ## 10. Accessibility
-- Ink on light fills only, contrast above 4.5:1
-- Focus ring: 4px ink outline, always visible
-- Motion off when `prefers-reduced-motion` is set
-- Color is never the only signal (labels on FitBar and badges)
-- Illustrations get `aria-hidden` unless they carry data, and the breathing-pack diagram has a text summary beside it
+- Contrast at least 7:1 for text, 4.5:1 for UI lines that carry meaning
+- Status never depends on color: icon, hatch pattern and text label together
+- 2px focus outline always visible
+- Motion off under `prefers-reduced-motion`
+- Illustrations are `aria-hidden` unless they carry data. The gas schematic has a text summary next to it.
+- Print stylesheet: paper background off, ink on white, so a recommendation can be exported to PDF as a clean spec sheet later.
+
+## 11. Fixes from the last prototype
+Your latest screenshot has issues to fix in the new build:
+- The "3–5% O₂ MAP zone" label overlaps the pack outline, and the "8.29 mL/kg·h" text overflows the tomato. Put labels outside the drawing on leader lines.
+- The header title badge ("SIH236…") is clipped by the browser tooltip and the layout. Give it room or drop it.
+- Inflow and outflow arrows don't line up with the pack edges. Anchor them to the pack's left and right walls.

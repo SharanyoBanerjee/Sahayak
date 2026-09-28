@@ -7,27 +7,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#111111",
-        paper: "#FFF8E7",
-        card: "#FFFFFF",
-        green: "#3DDC84",
-        tomato: "#FF5A4E",
-        sun: "#FFD23F",
-        sky: "#6EC5FF",
-        lilac: "#C7A6FF",
+        paper:   '#F3EEE4', // page background
+        card:    '#FAF7F0', // card surface
+        wash:    '#E9E2D3', // subtle fills, zebra stripes
+        rule:    '#CFC5B3', // hairline borders
+        mute:    '#857A6A', // secondary text
+        'ink-2': '#4A4036', // body text
+        ink:     '#241E18', // headings, primary buttons
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        serif: ['Newsreader', 'Georgia', 'serif'],
+        sans:  ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        mono:  ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
-        brutal: '6px 6px 0 #111111',
-        'brutal-hover': '9px 9px 0 #111111',
-        'brutal-sm': '3px 3px 0 #111111',
-        'brutal-lg': '8px 8px 0 #111111',
+        lift: '0 1px 0 #CFC5B3, 0 8px 20px -14px rgba(36, 30, 24, 0.35)',
       },
       borderRadius: {
-        brutal: '14px',
+        DEFAULT: '4px',
+        sm: '2px',
+        md: '4px',
+        lg: '6px',
+      },
+      letterSpacing: {
+        label: '0.08em',
       },
     },
   },

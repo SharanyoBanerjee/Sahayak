@@ -1,74 +1,72 @@
 import React from 'react';
 
-export const MascotBox: React.FC<{ className?: string }> = ({ className = 'w-10 h-10' }) => (
-  <svg
-    viewBox="0 0 48 48"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={`${className} mascot-bounce`}
-    aria-hidden="true"
-  >
-    {/* Box Body */}
-    <rect x="6" y="10" width="36" height="32" rx="6" fill="#FFD23F" stroke="#111111" strokeWidth="3" />
-    {/* Box Flap Top */}
-    <path d="M6 16L24 22L42 16" stroke="#111111" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-    {/* Smiling Eyes */}
-    <circle cx="18" cy="28" r="2.5" fill="#111111" />
-    <circle cx="30" cy="28" r="2.5" fill="#111111" />
-    {/* Cheerful Smile */}
-    <path d="M20 34C22 36 26 36 28 34" stroke="#111111" strokeWidth="2.5" strokeLinecap="round" />
+/**
+ * Technical engraving-style line illustrations
+ * Single-weight 1.25px stroke, ink stroke (#241E18), hatched shading, no colored fills.
+ */
+
+// 1. Tomato Plate (Solanum lycopersicum)
+export const TomatoIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+    <ellipse cx="16" cy="18" rx="11" ry="9.5" stroke="#241E18" strokeWidth="1.25" />
+    {/* Hatch shading */}
+    <path d="M12 23C14 24.5 18 24.5 20 23M10 21C13 23 19 23 22 21M9 19C11 20.5 21 20.5 23 19" stroke="#241E18" strokeWidth="0.75" strokeDasharray="1 2" />
+    {/* Calyx & stem */}
+    <path d="M16 8.5V5.5M16 8.5C14 7 11 8 9 9M16 8.5C18 7 21 8 23 9M16 8.5C15 10.5 13 11 11 11.5M16 8.5C17 10.5 19 11 21 11.5" stroke="#241E18" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
-export const TomatoIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
-  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-    <ellipse cx="20" cy="23" rx="15" ry="13" fill="#FF5A4E" stroke="#111111" strokeWidth="3" />
-    {/* Stem & Leaves */}
-    <path d="M20 10V6M16 8C18 9 22 9 24 8M13 12C16 11 20 11 22 13M27 12C24 11 20 11 18 13" stroke="#3DDC84" strokeWidth="3.5" strokeLinecap="round" />
-    <circle cx="15" cy="18" r="1.5" fill="#FFFFFF" />
+// 2. Biscuit Plate (Triticum aestivum)
+export const BiscuitIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+    <rect x="5" y="8" width="22" height="16" rx="2" stroke="#241E18" strokeWidth="1.25" />
+    {/* Inner decorative border */}
+    <rect x="7.5" y="10.5" width="17" height="11" rx="1" stroke="#241E18" strokeWidth="0.75" strokeDasharray="1.5 1.5" />
+    {/* Pinhole docking points */}
+    <circle cx="11" cy="14" r="0.8" fill="#241E18" />
+    <circle cx="16" cy="14" r="0.8" fill="#241E18" />
+    <circle cx="21" cy="14" r="0.8" fill="#241E18" />
+    <circle cx="11" cy="18" r="0.8" fill="#241E18" />
+    <circle cx="16" cy="18" r="0.8" fill="#241E18" />
+    <circle cx="21" cy="18" r="0.8" fill="#241E18" />
   </svg>
 );
 
-export const BiscuitIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
-  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-    <rect x="6" y="8" width="28" height="24" rx="5" fill="#FFD23F" stroke="#111111" strokeWidth="3" />
-    <circle cx="12" cy="15" r="1.5" fill="#111111" />
-    <circle cx="20" cy="15" r="1.5" fill="#111111" />
-    <circle cx="28" cy="15" r="1.5" fill="#111111" />
-    <circle cx="12" cy="25" r="1.5" fill="#111111" />
-    <circle cx="20" cy="25" r="1.5" fill="#111111" />
-    <circle cx="28" cy="25" r="1.5" fill="#111111" />
+// 3. Chips Pouch (Solanum tuberosum)
+export const ChipsIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+    <path d="M8 5L24 5L22 27L10 27L8 5Z" stroke="#241E18" strokeWidth="1.25" strokeLinejoin="round" />
+    {/* Seal crimp lines */}
+    <line x1="8" y1="7.5" x2="24" y2="7.5" stroke="#241E18" strokeWidth="0.75" />
+    <line x1="10" y1="24.5" x2="22" y2="24.5" stroke="#241E18" strokeWidth="0.75" />
+    {/* Hatch lines for pouch volume */}
+    <path d="M11 12C13 14 19 14 21 12M11 16C13 18 19 18 21 16" stroke="#241E18" strokeWidth="0.75" strokeDasharray="1.5 1.5" />
   </svg>
 );
 
-export const ChipsIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
-  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-    <path d="M10 6L30 6L28 34L12 34L10 6Z" fill="#FF5A4E" stroke="#111111" strokeWidth="3" strokeLinejoin="round" />
-    <path d="M10 12L30 12" stroke="#111111" strokeWidth="2.5" />
-    <path d="M12 28L28 28" stroke="#111111" strokeWidth="2.5" />
-    <circle cx="20" cy="20" r="5" fill="#FFD23F" stroke="#111111" strokeWidth="2" />
+// 4. Mango Plate (Mangifera indica)
+export const MangoIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+    <path d="M17 6C11 6 7 12 9 20C10.5 25 15 27 20 25C25 23 26 15 23 10C21 7.5 19 6 17 6Z" stroke="#241E18" strokeWidth="1.25" strokeLinejoin="round" />
+    <path d="M17 6C17 4 16 3 15 2.5" stroke="#241E18" strokeWidth="1.25" strokeLinecap="round" />
+    {/* Shading */}
+    <path d="M11 20C13 23 17 24 19 23M12 17C14 20 18 21 20 20" stroke="#241E18" strokeWidth="0.75" strokeDasharray="1 2" />
   </svg>
 );
 
-export const MangoIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
-  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-    <path d="M22 8C14 8 8 16 11 26C13 32 20 34 26 31C32 28 33 18 29 12C26 9 24 8 22 8Z" fill="#FFD23F" stroke="#111111" strokeWidth="3" />
-    <path d="M22 8C22 5 20 4 19 3M21 6C24 5 28 6 30 7" stroke="#3DDC84" strokeWidth="3" strokeLinecap="round" />
+// 5. Leafy Greens Plate (Spinacia oleracea)
+export const SpinachIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+    <path d="M16 27V9M16 9C10 9 8 18 16 26C24 18 22 9 16 9Z" stroke="#241E18" strokeWidth="1.25" strokeLinejoin="round" />
+    <path d="M11 17C13.5 18 16 18 16 18M21 17C18.5 18 16 18 16 18M13 22C14.5 22.5 16 22.5 16 22.5M19 22C17.5 22.5 16 22.5 16 22.5" stroke="#241E18" strokeWidth="0.75" strokeLinecap="round" />
   </svg>
 );
 
-export const SpinachIcon: React.FC<{ className?: string }> = ({ className = 'w-8 h-8' }) => (
-  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
-    <path d="M20 34V12M20 12C12 12 10 24 20 32C30 24 28 12 20 12Z" fill="#3DDC84" stroke="#111111" strokeWidth="3" strokeLinejoin="round" />
-    <path d="M12 22C16 23 20 23 20 23M28 22C24 23 20 23 20 23" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
-  </svg>
-);
-
-export const CommoditySticker: React.FC<{ commodityId?: string; isRespiring: boolean; className?: string }> = ({
-  commodityId,
-  isRespiring,
-  className = 'w-12 h-12',
-}) => {
+export const CommodityPlate: React.FC<{
+  commodityId?: string;
+  isRespiring: boolean;
+  className?: string;
+}> = ({ commodityId, isRespiring, className = 'w-6 h-6' }) => {
   if (commodityId === 'CMD-001') return <TomatoIcon className={className} />;
   if (commodityId === 'CMD-005') return <BiscuitIcon className={className} />;
   if (commodityId === 'CMD-006') return <ChipsIcon className={className} />;
@@ -77,9 +75,23 @@ export const CommoditySticker: React.FC<{ commodityId?: string; isRespiring: boo
   return isRespiring ? <TomatoIcon className={className} /> : <BiscuitIcon className={className} />;
 };
 
+export const getBotanicalName = (commodityId?: string, fallback = ''): string => {
+  switch (commodityId) {
+    case 'CMD-001': return 'Solanum lycopersicum';
+    case 'CMD-002': return 'Capsicum annuum';
+    case 'CMD-003': return 'Spinacia oleracea';
+    case 'CMD-004': return 'Mangifera indica';
+    case 'CMD-005': return 'Triticum aestivum (Baked)';
+    case 'CMD-006': return 'Solanum tuberosum (Fried)';
+    case 'CMD-007': return 'Arachis hypogaea';
+    case 'CMD-008': return 'Roasted Coffee';
+    default: return fallback || 'Specimen';
+  }
+};
+
 /**
- * Breathing Pack Hero Visual Diagram
- * Shows O2 arrows entering and CO2 arrows venting out through the film
+ * Hero Gas Exchange Schematic (Fig. 1)
+ * Technical cross-section with leader lines outside the artwork, anchored arrows, hatched shading.
  */
 export const BreathingPackDiagram: React.FC<{
   targetOtr?: number;
@@ -87,134 +99,205 @@ export const BreathingPackDiagram: React.FC<{
   tempC?: number;
 }> = ({ targetOtr = 1411, rO2 = 8.6, tempC = 12 }) => {
   return (
-    <div className="brutal-card p-4 sm:p-5 bg-card border-3 border-ink rounded-brutal shadow-brutal relative overflow-hidden my-4">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Animated SVG Diagram */}
-        <div className="relative w-full max-w-[280px] h-[160px] flex items-center justify-center">
-          <svg viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" aria-hidden="true">
-            {/* Ambient Air Inflow Side (Left) */}
-            <g className="gas-drift-in">
-              <path d="M15 50H45M45 50L35 44M45 50L35 56" stroke="#6EC5FF" strokeWidth="3" strokeLinecap="round" />
-              <text x="15" y="40" fill="#111111" fontSize="10" fontFamily="JetBrains Mono" fontWeight="700">O₂ (21%)</text>
+    <figure className="card card--framed p-6 space-y-4">
+      {/* Figure header */}
+      <div className="card-header">
+        <span className="label">Gas Exchange Equilibrium</span>
+        <span className="caption">Fig. 1 · MAP Schematic</span>
+      </div>
 
-              <path d="M15 105H45M45 105L35 99M45 105L35 111" stroke="#6EC5FF" strokeWidth="3" strokeLinecap="round" />
-              <text x="15" y="95" fill="#111111" fontSize="10" fontFamily="JetBrains Mono" fontWeight="700">O₂ Inflow</text>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        {/* Technical SVG drawing */}
+        <div className="md:col-span-7">
+          <svg
+            viewBox="0 0 420 220"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-auto"
+            aria-label="Cross-section diagram of gas exchange through breathable film package"
+          >
+            <defs>
+              {/* Hatching pattern for film cross-section */}
+              <pattern id="hatch-film" width="4" height="4" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="4" stroke="#241E18" strokeWidth="0.75" />
+              </pattern>
+              <pattern id="hatch-tomato" width="3" height="3" patternTransform="rotate(-45 0 0)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="3" stroke="#241E18" strokeWidth="0.5" strokeOpacity="0.4" />
+              </pattern>
+            </defs>
+
+            {/* Inflow Arrow (O2) anchored precisely to Left Pack Wall at x=80 */}
+            <g className="inflow-group">
+              <line x1="16" y1="75" x2="80" y2="75" stroke="#241E18" strokeWidth="1.25" />
+              <polygon points="80,75 72,71 72,79" fill="#241E18" />
+              {/* Text label outside drawing */}
+              <text x="16" y="65" fill="#4A4036" fontSize="9.5" fontFamily="Plus Jakarta Sans" fontWeight="600" letterSpacing="0.04em">
+                O₂ INFLOW (21% atm)
+              </text>
+              <text x="16" y="90" fill="#857A6A" fontSize="8.5" fontFamily="IBM Plex Mono">
+                OTR: {targetOtr.toLocaleString()} mL/m²·d·atm
+              </text>
             </g>
 
-            {/* Package Film Membrane */}
-            <rect x="55" y="20" width="165" height="120" rx="14" fill="#FFF8E7" stroke="#111111" strokeWidth="3.5" />
+            {/* Pack Outer Wall (x: 80 to 340, y: 30 to 190) */}
+            <rect x="80" y="30" width="260" height="160" rx="3" stroke="#241E18" strokeWidth="1.25" fill="#FAF7F0" />
             
-            {/* Micro-perforations / Breathable pores */}
-            <line x1="55" y1="40" x2="55" y2="44" stroke="#111111" strokeWidth="4" strokeLinecap="round" />
-            <line x1="55" y1="60" x2="55" y2="64" stroke="#111111" strokeWidth="4" strokeLinecap="round" />
-            <line x1="55" y1="80" x2="55" y2="84" stroke="#111111" strokeWidth="4" strokeLinecap="round" />
-            <line x1="55" y1="100" x2="55" y2="104" stroke="#111111" strokeWidth="4" strokeLinecap="round" />
-            <line x1="55" y1="120" x2="55" y2="124" stroke="#111111" strokeWidth="4" strokeLinecap="round" />
+            {/* Film thickness double hairline on left wall */}
+            <line x1="83" y1="30" x2="83" y2="190" stroke="#CFC5B3" strokeWidth="1" />
+            <line x1="337" y1="30" x2="337" y2="190" stroke="#CFC5B3" strokeWidth="1" />
 
-            {/* Produce inside pack (Tomato) */}
-            <ellipse cx="138" cy="84" rx="34" ry="28" fill="#FF5A4E" stroke="#111111" strokeWidth="3" />
-            <path d="M138 56V50M132 53C135 55 141 55 144 53" stroke="#3DDC84" strokeWidth="3" strokeLinecap="round" />
-            <text x="110" y="88" fill="#FFFFFF" fontSize="11" fontWeight="800">PRODUCE</text>
-            <text x="115" y="100" fill="#FFFFFF" fontSize="9" fontFamily="JetBrains Mono">{rO2} mL/kg·h</text>
+            {/* Micro-perforation tick indicators on film wall */}
+            {[50, 75, 100, 125, 150, 170].map((y) => (
+              <line key={y} x1="77" y1={y} x2="83" y2={y} stroke="#241E18" strokeWidth="1.25" />
+            ))}
 
-            {/* Equilibrium Gas State Label */}
-            <rect x="100" y="26" width="76" height="18" rx="4" fill="#3DDC84" stroke="#111111" strokeWidth="2" />
-            <text x="105" y="38" fill="#111111" fontSize="9" fontWeight="800">3–5% O₂ MAP</text>
+            {/* Headspace indicator label line */}
+            <line x1="210" y1="30" x2="210" y2="52" stroke="#CFC5B3" strokeWidth="0.75" strokeDasharray="2 2" />
+            <text x="210" y="24" textAnchor="middle" fill="#857A6A" fontSize="8.5" fontFamily="Plus Jakarta Sans" fontWeight="500" fontVariant="small-caps">
+              Internal Headspace (3–5% O₂ · &lt;5% CO₂)
+            </text>
 
-            {/* CO2 Outflow Side (Right) */}
-            <g className="gas-drift-out">
-              <path d="M225 60H260M260 60L250 54M260 60L250 66" stroke="#FF5A4E" strokeWidth="3" strokeLinecap="round" />
-              <text x="225" y="50" fill="#111111" fontSize="10" fontFamily="JetBrains Mono" fontWeight="700">CO₂ Out</text>
+            {/* Produce inside: line plate with botanical hatching */}
+            <ellipse cx="210" cy="120" rx="55" ry="42" stroke="#241E18" strokeWidth="1.25" fill="url(#hatch-tomato)" />
+            {/* Calyx & Stem */}
+            <path d="M210 78V72M210 78C206 75 200 76 195 78M210 78C214 75 220 76 225 78M210 78C208 81 204 83 200 84M210 78C212 81 216 83 220 84" stroke="#241E18" strokeWidth="1.25" strokeLinecap="round" />
+            
+            {/* Produce Annotation Label on leader line */}
+            <circle cx="210" cy="120" r="1.5" fill="#241E18" />
+            <polyline points="210,120 245,150 295,150" stroke="#4A4036" strokeWidth="0.75" fill="none" />
+            <text x="298" y="148" fill="#241E18" fontSize="8.5" fontFamily="Plus Jakarta Sans" fontWeight="600">
+              Respiring Tissue
+            </text>
+            <text x="298" y="159" fill="#857A6A" fontSize="8" fontFamily="IBM Plex Mono">
+              r_O₂: {rO2} mL/kg·h @ {tempC}°C
+            </text>
 
-              <path d="M225 110H260M260 110L250 104M260 110L250 116" stroke="#FF5A4E" strokeWidth="3" strokeLinecap="round" />
-              <text x="225" y="100" fill="#111111" fontSize="10" fontFamily="JetBrains Mono" fontWeight="700">&lt;4% CO₂</text>
+            {/* Outflow Arrow (CO2) anchored precisely to Right Pack Wall at x=340 */}
+            <g className="outflow-group">
+              <line x1="340" y1="75" x2="404" y2="75" stroke="#241E18" strokeWidth="1.25" />
+              <polygon points="404,75 396,71 396,79" fill="#241E18" />
+              {/* Text label outside drawing */}
+              <text x="404" y="65" textAnchor="end" fill="#4A4036" fontSize="9.5" fontFamily="Plus Jakarta Sans" fontWeight="600" letterSpacing="0.04em">
+                CO₂ OUTFLOW
+              </text>
+              <text x="404" y="90" textAnchor="end" fill="#857A6A" fontSize="8.5" fontFamily="IBM Plex Mono">
+                Permeability: &gt; {Math.round(targetOtr * 0.8).toLocaleString()}
+              </text>
             </g>
+
+            {/* Dimension line at bottom */}
+            <line x1="80" y1="205" x2="340" y2="205" stroke="#CFC5B3" strokeWidth="0.75" />
+            <line x1="80" y1="201" x2="80" y2="209" stroke="#CFC5B3" strokeWidth="0.75" />
+            <line x1="340" y1="201" x2="340" y2="209" stroke="#CFC5B3" strokeWidth="0.75" />
+            <text x="210" y="215" textAnchor="middle" fill="#857A6A" fontSize="8" fontFamily="IBM Plex Mono">
+              Equilibrium Area: 0.045 m² · Thickness: 25–35 µm
+            </text>
           </svg>
         </div>
 
-        {/* Text Description Beside Hero Diagram */}
-        <div className="flex-1 space-y-2 text-xs">
-          <div className="inline-flex items-center space-x-1.5 bg-sun text-ink font-bold px-2.5 py-1 rounded-md border-2 border-ink shadow-brutal-sm">
-            <span>Hero Demo: Active Gas Equilibrium</span>
+        {/* Text summary beside hero */}
+        <div className="md:col-span-5 space-y-3 text-xs border-t md:border-t-0 md:border-l border-rule pt-4 md:pt-0 md:pl-6">
+          <div>
+            <span className="label text-mute block mb-1">State Equation</span>
+            <p className="font-serif text-base text-ink font-medium leading-snug">
+              Active Steady-State Respiration
+            </p>
           </div>
-          <h4 className="text-sm font-extrabold text-ink">
-            Modified Atmosphere "Breathing Pack"
-          </h4>
-          <p className="text-ink leading-relaxed font-medium">
-            At <strong>{tempC}°C</strong>, the food consumes oxygen and emits CO₂. 
-            The system tuned an optimal target of <strong>{targetOtr.toLocaleString()} mL/m²·day</strong> OTR to balance oxygen intake without letting CO₂ accumulate past toxic limits.
+          <p className="text-ink-2 leading-relaxed font-normal text-xs">
+            At <span className="font-mono font-medium text-ink">{tempC}°C</span>, commodity metabolic activity continuously consumes O₂ and evolves CO₂. The engine solves for a steady-state film transmission rate of <span className="font-mono font-medium text-ink">{targetOtr.toLocaleString()} mL/m²·day·atm</span> to maintain internal O₂ at 3–5% without triggering anaerobic fermentation.
           </p>
+
+          <div className="border border-rule rounded p-2.5 bg-paper/60 space-y-1 text-[11px]">
+            <div className="flex justify-between items-baseline">
+              <span className="text-mute font-medium">Equilibrium OTR</span>
+              <span className="font-mono font-medium text-ink">{targetOtr.toLocaleString()} mL/m²·d·atm</span>
+            </div>
+            <div className="flex justify-between items-baseline border-t border-rule/60 pt-1">
+              <span className="text-mute font-medium">Metabolic Consumption</span>
+              <span className="font-mono font-medium text-ink">{rO2} mL O₂ / kg·h</span>
+            </div>
+          </div>
         </div>
+      </div>
+    </figure>
+  );
+};
+
+/**
+ * Technical Film Cross-Section
+ * Multi-layer structure drawn to scale with hatched fills and leader annotations
+ */
+export const FilmLayerStack: React.FC<{ structure: string }> = ({ structure }) => {
+  const s = structure.toLowerCase();
+  const isFoil  = s.includes('alu') || s.includes('foil');
+  const isMet   = s.includes('met-') || s.includes('metallised');
+  const isMicro = s.includes('micro-perforat') || s.includes('perforat');
+  const isBio   = s.includes('pla') || s.includes('pbat') || s.includes('compostable');
+
+  type Layer = { label: string; thickness: string; role: string; hatch: string };
+
+  const layers: Layer[] = isFoil
+    ? [
+        { label: 'PET', thickness: '12 µm', role: 'Print & tensile carrier', hatch: 'diagonal' },
+        { label: 'Aluminium Foil', thickness: '9 µm', role: 'Gas & light barrier core', hatch: 'solid' },
+        { label: 'LDPE', thickness: '50 µm', role: 'Hermetic heat seal layer', hatch: 'dots' },
+      ]
+    : isMet
+    ? [
+        { label: 'Met-PET', thickness: '12 µm', role: 'Vacuum-deposited Al barrier', hatch: 'diagonal' },
+        { label: 'LDPE', thickness: '40 µm', role: 'Puncture & seal layer', hatch: 'dots' },
+      ]
+    : isMicro
+    ? [
+        { label: 'BOPP (Micro-perf)', thickness: '25 µm', role: 'Laser micro-perforated MAP membrane', hatch: 'grid' },
+      ]
+    : isBio
+    ? [
+        { label: 'PLA / PBAT', thickness: '30 µm', role: 'Compostable bio-polymer matrix', hatch: 'dots' },
+      ]
+    : [
+        { label: 'Polyolefin Co-ex', thickness: '35 µm', role: 'Multi-layer co-extruded barrier', hatch: 'diagonal' },
+      ];
+
+  return (
+    <div className="border border-rule rounded p-3 bg-paper/50 space-y-2">
+      <div className="flex items-center justify-between text-[11px]">
+        <span className="caption">Cross-Sectional Structure</span>
+        <span className="font-mono text-mute text-[10px] truncate max-w-[55%]">{structure}</span>
+      </div>
+
+      <div className="space-y-1">
+        {layers.map((layer, idx) => (
+          <div
+            key={idx}
+            className="flex items-center justify-between px-2.5 py-1.5 border border-rule rounded-sm bg-card text-xs"
+          >
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono font-medium text-ink text-[11px]">{layer.label}</span>
+              <span className="font-mono text-[10px] text-mute">({layer.thickness})</span>
+            </div>
+            <span className="text-[11px] text-ink-2 font-normal text-right">{layer.role}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
 /**
- * Visual Film Layer Stack
- * Shows stacked colored strips illustrating the multi-layer material structure
+ * Empty & Error State Illustration
+ * Technical line drawing of balance / specimen tray
  */
-export const FilmLayerStack: React.FC<{ structure: string }> = ({ structure }) => {
-  const isFoil = structure.toLowerCase().includes('alu') || structure.toLowerCase().includes('foil');
-  const isMet = structure.toLowerCase().includes('met-') || structure.toLowerCase().includes('metallised');
-  const isMicro = structure.toLowerCase().includes('micro-perforat') || structure.toLowerCase().includes('perforat');
-  const isBio = structure.toLowerCase().includes('pla') || structure.toLowerCase().includes('pbat') || structure.toLowerCase().includes('compostable');
-
-  return (
-    <div className="my-2.5 p-2 bg-paper rounded-lg border-2 border-ink space-y-1">
-      <div className="text-[10px] font-extrabold uppercase tracking-wider text-ink mb-1 flex items-center justify-between">
-        <span>Film Cross-Section Layers:</span>
-        <span className="font-mono text-[9px] bg-card px-1.5 py-0.5 rounded border border-ink">{structure}</span>
-      </div>
-
-      {isFoil ? (
-        <div className="space-y-1">
-          <div className="bg-sky px-2 py-1 rounded border border-ink text-[10px] font-bold flex justify-between">
-            <span>12µm PET Outer Layer (Print & High Tensile Strength)</span>
-            <span className="font-mono">Layer 1</span>
-          </div>
-          <div className="bg-sun px-2 py-1 rounded border border-ink text-[10px] font-extrabold flex justify-between">
-            <span>9µm Aluminium Foil (Zero Gas & Light Transmission Barrier)</span>
-            <span className="font-mono">Layer 2 (Core)</span>
-          </div>
-          <div className="bg-green px-2 py-1 rounded border border-ink text-[10px] font-bold flex justify-between">
-            <span>50µm LDPE Inner Sealant Layer (Hermetic Food-Contact Seal)</span>
-            <span className="font-mono">Layer 3</span>
-          </div>
-        </div>
-      ) : isMet ? (
-        <div className="space-y-1">
-          <div className="bg-sky px-2 py-1 rounded border border-ink text-[10px] font-bold flex justify-between">
-            <span>12µm Met-PET Film (Aluminium Vapor Vacuum Deposition Barrier)</span>
-            <span className="font-mono">Barrier Layer</span>
-          </div>
-          <div className="bg-green px-2 py-1 rounded border border-ink text-[10px] font-bold flex justify-between">
-            <span>40µm LDPE Sealant Layer (Tear & Puncture Resistance)</span>
-            <span className="font-mono">Seal Layer</span>
-          </div>
-        </div>
-      ) : isMicro ? (
-        <div className="space-y-1">
-          <div className="bg-lilac px-2 py-1 rounded border border-ink text-[10px] font-bold flex justify-between">
-            <span>25µm BOPP with 50–100µm Laser Micro-Perforations (Tailored MAP Pores)</span>
-            <span className="font-mono">Breathable Film</span>
-          </div>
-        </div>
-      ) : isBio ? (
-        <div className="space-y-1">
-          <div className="bg-green px-2 py-1 rounded border border-ink text-[10px] font-bold flex justify-between">
-            <span>30µm Certified Compostable PLA / PBAT Bio-Polymer Substrate</span>
-            <span className="font-mono">Bio Mono-layer</span>
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-1">
-          <div className="bg-sun px-2 py-1 rounded border border-ink text-[10px] font-bold flex justify-between">
-            <span>Polyolefin Co-extrusion Layer Structure</span>
-            <span className="font-mono">Substrate</span>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+export const SpecimenTrayIllustration: React.FC<{ className?: string }> = ({ className = 'w-16 h-16' }) => (
+  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+    {/* Open carton / sample plate */}
+    <rect x="8" y="18" width="32" height="22" rx="2" stroke="#241E18" strokeWidth="1.25" />
+    <line x1="8" y1="26" x2="40" y2="26" stroke="#CFC5B3" strokeWidth="1" />
+    {/* Open flap lines */}
+    <path d="M8 18L14 8L34 8L40 18" stroke="#241E18" strokeWidth="1.25" strokeLinejoin="round" />
+    <path d="M14 8L20 18M34 8L28 18" stroke="#CFC5B3" strokeWidth="0.75" />
+    {/* Center specimen target */}
+    <circle cx="24" cy="34" r="3" stroke="#241E18" strokeWidth="1" strokeDasharray="1.5 1.5" />
+    <circle cx="24" cy="34" r="0.8" fill="#241E18" />
+  </svg>
+);
