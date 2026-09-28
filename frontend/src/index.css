@@ -2,40 +2,164 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ink: #111111;
+  --paper: #FFF8E7;
+  --card: #FFFFFF;
+  --green: #3DDC84;
+  --tomato: #FF5A4E;
+  --sun: #FFD23F;
+  --sky: #6EC5FF;
+  --lilac: #C7A6FF;
+  --border: 3px solid var(--ink);
+  --shadow: 6px 6px 0 var(--ink);
+  --shadow-hover: 9px 9px 0 var(--ink);
+  --radius: 14px;
+}
+
 @layer base {
   body {
-    background-color: #F7F5EE;
-    color: #1C2B22;
-    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', system-ui, sans-serif;
-    color: #0F4D2A;
+    color: var(--ink);
+    font-weight: 800;
   }
 }
 
-/* Accessible focus rings */
-*:focus-visible {
-  outline: 2px solid #1F8A4C;
-  outline-offset: 2px;
+/* Neo-Brutalist utility classes */
+.brutal-card {
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
 }
 
-/* Custom subtle scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.brutal-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--shadow-hover);
 }
 
-::-webkit-scrollbar-track {
-  background: #F7F5EE;
+.brutal-btn {
+  background: var(--green);
+  border: var(--border);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--ink);
+  color: var(--ink);
+  font-weight: 800;
+  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #D1D5DB;
-  border-radius: 4px;
+.brutal-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #9CA3AF;
+.brutal-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.brutal-input {
+  background: #FFFFFF;
+  border: var(--border);
+  border-radius: 8px;
+  color: var(--ink);
+  font-weight: 600;
+  outline: none;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.brutal-input:focus {
+  background: var(--sun);
+  outline: 4px solid var(--ink);
+}
+
+/* Skeleton diagonal sliding stripes */
+@keyframes slideStripes {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+.skeleton-striped {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--sun),
+    var(--sun) 15px,
+    #FFFFFF 15px,
+    #FFFFFF 30px
+  );
+  background-size: 40px 40px;
+  animation: slideStripes 1.2s linear infinite;
+}
+
+/* Popping checkmark animation */
+@keyframes popCheck {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.animate-pop-check {
+  animation: popCheck 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px) rotate(-0.5deg);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.45s cubic-bezier(0.2, 1.4, 0.4, 1), transform 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+/* Gas drift animation for Breathing Pack */
+@keyframes driftIn {
+  0% { transform: translateX(-16px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(8px); opacity: 0; }
+}
+
+@keyframes driftOut {
+  0% { transform: translateX(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(20px); opacity: 0; }
+}
+
+.gas-drift-in {
+  animation: driftIn 2.2s infinite ease-in-out;
+}
+
+.gas-drift-out {
+  animation: driftOut 2.2s infinite ease-in-out;
+}
+
+/* Mascot bounce */
+@keyframes mascotBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.mascot-bounce {
+  animation: mascotBounce 2s infinite ease-in-out;
+}
+
+/* Accessibility: Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal.in {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

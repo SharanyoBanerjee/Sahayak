@@ -1,118 +1,175 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { DerivedRequirements } from '../lib/types';
-import { Wind, Droplets, Activity, Gauge, Clock, ShieldCheck } from 'lucide-react';
+import { Activity } from 'lucide-react';
 
 interface RequirementStripProps {
   requirements: DerivedRequirements;
   isProduce: boolean;
 }
 
+// Simple count-up hook
+function useCountUp(target: number = 0, duration: number = 700) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = target;
+    if (start === end) {
+      setCount(end);
+      return;
+    }
+    const stepTime = 20;
+    const steps = duration / stepTime;
+    const increment = (end - start) / steps;
+
+    const timer = setInterval(() => {
+      start += increment;
+      if ((increment > 0 && start >= end) || (increment < 0 && start <= end)) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(Math.round(start * 10) / 10);
+      }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [target, duration]);
+
+  return count;
+}
+
 export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements, isProduce }) => {
+  const animatedOtr = useCountUp(requirements.target_otr_ml_m2_day_atm || 0);
+  const animatedWvtr = useCountUp(requirements.max_wvtr_g_m2_day || 0);
+  const animatedDryOtr = useCountUp(requirements.max_otr_ml_m2_day_atm || 0);
+  const animatedResp = useCountUp(requirements.r_o2_at_storage_temp || 0);
+  const animatedWater = useCountUp(requirements.allowable_water_gain_g || 0);
+  const animatedCo2 = useCountUp(requirements.min_co2_perm_ml_m2_day_atm || 0);
+
   return (
-    <div className="bg-emerald-950 text-white rounded-xl p-4 shadow-sm mb-6 border border-emerald-900">
-      <div className="flex items-center justify-between mb-3 border-b border-emerald-800/80 pb-2">
+    <div className="sticky top-20 z-20 brutal-card p-4 bg-card border-3 border-ink rounded-brutal shadow-brutal mb-6 transition-all">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3 border-b-3 border-ink pb-2">
         <div className="flex items-center space-x-2">
-          <Activity className="w-4 h-4 text-accent" />
-          <h3 className="text-sm font-semibold tracking-wide uppercase text-emerald-200">
-            Engine-Derived Barrier Targets
+          <span className="p-1 bg-sun rounded border-2 border-ink shadow-brutal-sm -rotate-2">
+            <Activity className="w-4 h-4 text-ink" />
+          </span>
+          <h3 className="text-xs sm:text-sm font-extrabold uppercase tracking-wide text-ink">
+            {isProduce ? 'Gas Balance for Respiring Produce' : 'Dry Food Moisture & Oxidation Limits'}
           </h3>
         </div>
-        <div className="flex items-center space-x-1 text-xs text-emerald-300">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Calculated via Thermodynamic & Biological Equilibrium</span>
-        </div>
+        <span className="text-[11px] font-extrabold bg-lilac text-ink px-2 py-0.5 rounded border-2 border-ink shadow-brutal-sm">
+          TARGET BARRIER SPECS
+        </span>
       </div>
 
+      {/* 4 Colored Number Tiles */}
       {isProduce ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-emerald-900/60 rounded-lg p-2.5 border border-emerald-800">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-300 mb-1">
-              <Wind className="w-3.5 h-3.5" />
-              <span>Target OTR</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {/* Tile 1: Green */}
+          <div className="bg-green p-3 rounded-xl border-3 border-ink shadow-brutal-sm">
+            <span className="text-[10px] font-extrabold uppercase text-ink block">
+              Target Equilibrium OTR
+            </span>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-ink leading-tight">
+              {animatedOtr.toLocaleString()}
             </div>
-            <div className="text-lg font-bold font-mono text-white">
-              {requirements.target_otr_ml_m2_day_atm?.toLocaleString()}
-            </div>
-            <div className="text-[10px] text-emerald-400">mL/m²·day·atm</div>
+            <span className="text-[9px] font-mono font-bold text-ink/80 block">
+              mL/m²·day·atm
+            </span>
           </div>
 
-          <div className="bg-emerald-900/60 rounded-lg p-2.5 border border-emerald-800">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-300 mb-1">
-              <Activity className="w-3.5 h-3.5" />
-              <span>Respiration @ Temp</span>
+          {/* Tile 2: Sun */}
+          <div className="bg-sun p-3 rounded-xl border-3 border-ink shadow-brutal-sm">
+            <span className="text-[10px] font-extrabold uppercase text-ink block">
+              Respiration @ Temp
+            </span>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-ink leading-tight">
+              {animatedResp}
             </div>
-            <div className="text-lg font-bold font-mono text-white">
-              {requirements.r_o2_at_storage_temp}
-            </div>
-            <div className="text-[10px] text-emerald-400">mL O₂/kg·h</div>
+            <span className="text-[9px] font-mono font-bold text-ink/80 block">
+              mL O₂/kg·h
+            </span>
           </div>
 
-          <div className="bg-emerald-900/60 rounded-lg p-2.5 border border-emerald-800">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-300 mb-1">
-              <Gauge className="w-3.5 h-3.5" />
-              <span>Min CO₂ Perm</span>
+          {/* Tile 3: Sky */}
+          <div className="bg-sky p-3 rounded-xl border-3 border-ink shadow-brutal-sm">
+            <span className="text-[10px] font-extrabold uppercase text-ink block">
+              Min CO₂ Perm
+            </span>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-ink leading-tight">
+              {animatedCo2.toLocaleString()}
             </div>
-            <div className="text-lg font-bold font-mono text-white">
-              {requirements.min_co2_perm_ml_m2_day_atm?.toLocaleString()}
-            </div>
-            <div className="text-[10px] text-emerald-400">mL/m²·day</div>
+            <span className="text-[9px] font-mono font-bold text-ink/80 block">
+              mL/m²·day
+            </span>
           </div>
 
-          <div className="bg-emerald-900/60 rounded-lg p-2.5 border border-emerald-800">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-300 mb-1">
-              <Clock className="w-3.5 h-3.5" />
-              <span>Pack Weight & Area</span>
+          {/* Tile 4: Lilac */}
+          <div className="bg-lilac p-3 rounded-xl border-3 border-ink shadow-brutal-sm">
+            <span className="text-[10px] font-extrabold uppercase text-ink block">
+              Pack Size
+            </span>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-ink leading-tight">
+              {requirements.pack_weight_kg}kg
             </div>
-            <div className="text-lg font-bold font-mono text-white">
-              {requirements.pack_weight_kg} kg
-            </div>
-            <div className="text-[10px] text-emerald-400">Area: {requirements.pack_area_m2} m²</div>
+            <span className="text-[9px] font-mono font-bold text-ink/80 block">
+              Area: {requirements.pack_area_m2} m²
+            </span>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-emerald-900/60 rounded-lg p-2.5 border border-emerald-800">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-300 mb-1">
-              <Droplets className="w-3.5 h-3.5" />
-              <span>Max Allowable WVTR</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {/* Tile 1: Green */}
+          <div className="bg-green p-3 rounded-xl border-3 border-ink shadow-brutal-sm">
+            <span className="text-[10px] font-extrabold uppercase text-ink block">
+              Max Permissible WVTR
+            </span>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-ink leading-tight">
+              &le;{animatedWvtr}
             </div>
-            <div className="text-lg font-bold font-mono text-white">
-              &le; {requirements.max_wvtr_g_m2_day}
-            </div>
-            <div className="text-[10px] text-emerald-400">g/m²·day (moisture limit)</div>
+            <span className="text-[9px] font-mono font-bold text-ink/80 block">
+              g/m²·day (Moisture)
+            </span>
           </div>
 
-          <div className="bg-emerald-900/60 rounded-lg p-2.5 border border-emerald-800">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-300 mb-1">
-              <Wind className="w-3.5 h-3.5" />
-              <span>Max Allowable OTR</span>
+          {/* Tile 2: Sun */}
+          <div className="bg-sun p-3 rounded-xl border-3 border-ink shadow-brutal-sm">
+            <span className="text-[10px] font-extrabold uppercase text-ink block">
+              Max Permissible OTR
+            </span>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-ink leading-tight">
+              &le;{animatedDryOtr}
             </div>
-            <div className="text-lg font-bold font-mono text-white">
-              &le; {requirements.max_otr_ml_m2_day_atm}
-            </div>
-            <div className="text-[10px] text-emerald-400">mL/m²·day·atm (oxidation limit)</div>
+            <span className="text-[9px] font-mono font-bold text-ink/80 block">
+              mL/m²·day·atm (Fat)
+            </span>
           </div>
 
-          <div className="bg-emerald-900/60 rounded-lg p-2.5 border border-emerald-800">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-300 mb-1">
-              <Droplets className="w-3.5 h-3.5" />
-              <span>Max Water Gain</span>
+          {/* Tile 3: Sky */}
+          <div className="bg-sky p-3 rounded-xl border-3 border-ink shadow-brutal-sm">
+            <span className="text-[10px] font-extrabold uppercase text-ink block">
+              Allowed Water Gain
+            </span>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-ink leading-tight">
+              {animatedWater}g
             </div>
-            <div className="text-lg font-bold font-mono text-white">
-              {requirements.allowable_water_gain_g} g
-            </div>
-            <div className="text-[10px] text-emerald-400">per {requirements.pack_weight_kg}kg pack</div>
+            <span className="text-[9px] font-mono font-bold text-ink/80 block">
+              Critical Crisp Limit
+            </span>
           </div>
 
-          <div className="bg-emerald-900/60 rounded-lg p-2.5 border border-emerald-800">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-300 mb-1">
-              <Clock className="w-3.5 h-3.5" />
-              <span>Target Duration</span>
+          {/* Tile 4: Lilac */}
+          <div className="bg-lilac p-3 rounded-xl border-3 border-ink shadow-brutal-sm">
+            <span className="text-[10px] font-extrabold uppercase text-ink block">
+              Target Shelf Life
+            </span>
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-ink leading-tight">
+              {requirements.shelf_life_days}d
             </div>
-            <div className="text-lg font-bold font-mono text-white">
-              {requirements.shelf_life_days} Days
-            </div>
-            <div className="text-[10px] text-emerald-400">Surface: {requirements.pack_area_m2} m²</div>
+            <span className="text-[9px] font-mono font-bold text-ink/80 block">
+              Pack: {requirements.pack_weight_kg}kg
+            </span>
           </div>
         </div>
       )}

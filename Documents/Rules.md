@@ -8,7 +8,7 @@ Python 3.12, Django, DRF, PostgreSQL. React, Vite, TypeScript, Tailwind. Docker 
 ## 2. Libraries
 **Use:** `djangorestframework`, `django-cors-headers`, `psycopg`, `pytest`, `pytest-django`, `react-router`, `zod`. `scikit-learn` only in the optional ML step.
 
-**Avoid:** PyTorch, TensorFlow, LLM calls inside the engine, Redux, extra UI kits, any new dependency without asking.
+**Avoid:** PyTorch, TensorFlow, LLM calls inside the engine, Redux, extra UI kits, animation libraries (use CSS + `IntersectionObserver`), any new dependency without asking.
 
 ## 3. Code style
 - Simplest code that works. Lean over clever.
@@ -25,6 +25,13 @@ Python 3.12, Django, DRF, PostgreSQL. React, Vite, TypeScript, Tailwind. Docker 
 - Keep units explicit in names and comments (`otr_ml_m2_h_atm`).
 - Respiration math lives only in `engine/respiration.py`, with unit tests.
 - The two demo cases (tomato-type produce, dry biscuit-type product) must always pass as tests.
+
+## 4b. UI rules
+- Follow `Design.md` tokens exactly. No new colors, no blur shadows, no gradients.
+- Fonts: Plus Jakarta Sans and JetBrains Mono only.
+- Animate `transform` and `opacity` only, and always honor `prefers-reduced-motion`.
+- No compliance or certification claims in the UI (no "BIS compliant" badges). Only claim what the data supports.
+- Never show a blank panel while loading.
 
 ## 5. Errors
 - Validate at the serializer.

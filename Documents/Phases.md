@@ -35,6 +35,13 @@ Repo, Docker Compose, Django + React skeletons, `/api/health/`.
 - Loading, empty and error states
 **Done when:** someone else runs both demos without help.
 
+## Phase 5b: Neo-brutalist UI pass
+- Apply tokens and fonts from `Design.md`, restyle every component
+- SVG illustrations: commodity icons, breathing-pack diagram, film layer stack, empty states
+- Loading: engine stepper and skeleton cards (600ms minimum)
+- Scroll: reveal, FitBar fill, count-up, sticky requirement strip
+**Done when:** both demo presets look and feel distinct, and reduced-motion mode works.
+
 ## Phase 6: Demo polish
 - Preset buttons for the two demo cases
 - Side-by-side moment: same app, produce vs. dry product
