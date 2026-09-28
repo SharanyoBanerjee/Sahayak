@@ -1,0 +1,50 @@
+[
+  {
+    "id": "RUL-001",
+    "name": "High Fat Oxidation Barrier Rule",
+    "condition": "fat_pct >= 10.0 and shelf_life_days >= 60",
+    "target_property": "otr",
+    "rationale": "High lipid content coupled with extended shelf-life requires strict limitation of oxygen ingress (OTR < 2.0 mL/m²·day·atm) to prevent lipid autoxidation and rancidity.",
+    "source_id": "SRC-003"
+  },
+  {
+    "id": "RUL-002",
+    "name": "Dry Food Crispness Retention (WVTR) Rule",
+    "condition": "moisture_pct <= 5.0 and critical_moisture_pct <= 6.5",
+    "target_property": "wvtr",
+    "rationale": "Crisp dry products rapidly lose crispness when moisture uptake crosses the critical threshold. Maximum permissible WVTR must remain below critical water gain limits (WVTR < 2.0 g/m²·day).",
+    "source_id": "SRC-003"
+  },
+  {
+    "id": "RUL-003",
+    "name": "Produce Respiration Equilibrium MAP Rule",
+    "condition": "is_respiring == true and resp_o2 > 0",
+    "target_property": "respiration_match",
+    "rationale": "Fresh produce consumes O2 and evolves CO2 continuously. The film permeability must equal the produce respiration rate at the storage temperature to maintain safe equilibrium O2 (3-5%) and avoid anaerobic off-flavors.",
+    "source_id": "SRC-002"
+  },
+  {
+    "id": "RUL-004",
+    "name": "CO2 Accumulation Injury Prevention Rule",
+    "condition": "is_respiring == true and y_co2_estimated > co2_tolerance",
+    "target_property": "co2_perm",
+    "rationale": "Carbon dioxide concentration inside modified atmosphere packs must not exceed the commodity tolerance threshold, requiring films with adequate CO2 permeability or micro-perforations.",
+    "source_id": "SRC-002"
+  },
+  {
+    "id": "RUL-005",
+    "name": "Acidic Product Corrosion & Scalping Protection",
+    "condition": "ph < 4.6",
+    "target_property": "acid_resistance",
+    "rationale": "Low pH acidic commodities require inert polymer contact layers (like high-grade PE or PP) to prevent chemical scalping and seal deterioration.",
+    "source_id": "SRC-005"
+  },
+  {
+    "id": "RUL-006",
+    "name": "Extended Ambient Storage Barrier Maximization",
+    "condition": "shelf_life_days > 180 and storage_type == 'ambient'",
+    "target_property": "ultra_barrier",
+    "rationale": "Long-term ambient storage without refrigeration necessitates foil or high-barrier multi-layer laminates to withstand cumulative seasonal humidity and temperature fluctuations.",
+    "source_id": "SRC-004"
+  }
+]

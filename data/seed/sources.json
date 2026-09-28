@@ -1,0 +1,32 @@
+[
+  {
+    "id": "SRC-001",
+    "title": "Bureau of Indian Standards: IS 10171 - Guide on Packaging of Fresh Fruits and Vegetables",
+    "url": "https://standardsbis.bsbedge.com/",
+    "year": 2020
+  },
+  {
+    "id": "SRC-002",
+    "title": "Kader, A. A. - Postharvest Technology of Horticultural Crops (University of California Agriculture and Natural Resources)",
+    "url": "https://postharvest.ucdavis.edu/",
+    "year": 2002
+  },
+  {
+    "id": "SRC-003",
+    "title": "Robertson, G. L. - Food Packaging: Principles and Practice (3rd Edition, CRC Press)",
+    "url": "https://www.routledge.com/Food-Packaging-Principles-and-Practice/Robertson/p/book/9781439862414",
+    "year": 2012
+  },
+  {
+    "id": "SRC-004",
+    "title": "FAO Technical Paper: Appropriate Food Packaging Solutions for Developing Countries",
+    "url": "https://www.fao.org/3/i4017e/i4017e.pdf",
+    "year": 2014
+  },
+  {
+    "id": "SRC-005",
+    "title": "Indian Institute of Packaging (IIP) Handbook of Packaging Materials",
+    "url": "https://www.iip-in.com/",
+    "year": 2019
+  }
+]
