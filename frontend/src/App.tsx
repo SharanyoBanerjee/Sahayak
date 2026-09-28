@@ -5,8 +5,9 @@ import { FoodForm } from './components/FoodForm';
 import { RequirementStrip } from './components/RequirementStrip';
 import { ResultCard } from './components/ResultCard';
 import { EngineStepper } from './components/EngineStepper';
-import { BreathingPackDiagram, SpecimenTrayIllustration } from './components/Illustrations';
+import { BreathingPackDiagram, HermeticBarrierDiagram, SpecimenTrayIllustration } from './components/Illustrations';
 import { Footer } from './components/Footer';
+import { CurtainLoader } from './components/CurtainLoader';
 import {
   Commodity,
   FoodFormState,
@@ -17,6 +18,7 @@ import { fetchCommodities, getRecommendations, checkHealth } from './lib/api';
 import { AlertCircle } from 'lucide-react';
 
 export const App: React.FC = () => {
+  const [showCurtain, setShowCurtain] = useState<boolean>(true);
   const [formState, setFormState] = useState<FoodFormState>(PRESET_TOMATO);
   const [commodities, setCommodities] = useState<Commodity[]>([]);
   const [results, setResults] = useState<RecommendResponse | null>(null);
@@ -24,6 +26,7 @@ export const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [serverHealthy, setServerHealthy] = useState<boolean>(true);
   const [activePreset, setActivePreset] = useState<string | null>('CMD-001');
+
 
   useEffect(() => {
     const init = async () => {
@@ -50,7 +53,7 @@ export const App: React.FC = () => {
   }, []);
 
   const handleFormChange = (updates: Partial<FoodFormState>) => {
-    setFormState((prev) => {
+    setFormState((prev: FoodFormState) => {
       if (updates.commodity_id) setActivePreset(updates.commodity_id);
       else setActivePreset(null);
       return { ...prev, ...updates };
@@ -59,7 +62,7 @@ export const App: React.FC = () => {
 
   const handleSelectPreset = async (preset: FoodFormState) => {
     setFormState(preset);
-    setActivePreset(preset.commodity_id);
+    setActivePreset(preset.commodity_id || null);
     setError(null);
     setIsLoading(true);
 
@@ -100,28 +103,42 @@ export const App: React.FC = () => {
 
   // Partition recommendations into passing / compliant vs did not meet requirements
   const passingRecommendations = results?.recommendations.filter(
-    (r) => r.fit_score >= 40 && r.fit_status !== 'Unsuitable' && r.fit_status !== 'fail'
+    (r: any) => r.fit_score >= 40 && r.fit_status !== 'Unsuitable' && r.fit_status !== 'fail'
   ) ?? [];
 
   const failingRecommendations = results?.recommendations.filter(
-    (r) => r.fit_score < 40 || r.fit_status === 'Unsuitable' || r.fit_status === 'fail'
+    (r: any) => r.fit_score < 40 || r.fit_status === 'Unsuitable' || r.fit_status === 'fail'
   ) ?? [];
 
   return (
     <div className="min-h-screen flex flex-col bg-paper">
+      {showCurtain && (
+        <CurtainLoader onComplete={() => setShowCurtain(false)} />
+      )}
       <Header serverHealthy={serverHealthy} />
 
-      <main className="flex-1 max-w-[1240px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-[1240px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Page title section */}
+        <div className="mb-6">
+          <span className="label text-accent mb-2 block">Packaging Intelligence</span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-ink mb-2">
+            Material Recommendations
+          </h2>
+          <p className="text-sm text-mute max-w-xl">
+            Enter commodity properties below to compute barrier requirements and receive ranked packaging substrates with citations.
+          </p>
+        </div>
+
         {/* Error notification */}
         {error && (
           <div
-            className="card mb-6 p-4 border-ink flex items-start gap-3 text-xs text-ink"
+            className="card mb-6 p-4 border-red-200 bg-red-50 flex items-start gap-3 text-xs text-red-800"
             role="alert"
           >
-            <AlertCircle className="w-4 h-4 text-ink flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
-              <span className="label text-ink block mb-0.5">Evaluation Error</span>
-              <p className="text-ink-2">{error}</p>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-red-600 block mb-0.5">Evaluation Error</span>
+              <p>{error}</p>
             </div>
           </div>
         )}
@@ -154,19 +171,34 @@ export const App: React.FC = () => {
                   isProduce={results.is_produce}
                 />
 
-                {/* Hero Gas exchange schematic (Fig. 1) — produce only */}
-                {results.is_produce && (
+                {/* Hero Packaging Schematic (Fig. 1) */}
+                {results.is_produce ? (
                   <BreathingPackDiagram
+                    commodityId={formState.commodity_id}
+                    commodityName={results.commodity_name || formState.commodity_name}
                     targetOtr={results.requirements_derived.target_otr_ml_m2_day_atm}
                     rO2={results.requirements_derived.r_o2_at_storage_temp}
                     tempC={results.requirements_derived.storage_temp_c}
+                    minCo2Perm={results.requirements_derived.min_co2_perm_ml_m2_day_atm}
+                    packArea={results.requirements_derived.pack_area_m2}
+                  />
+                ) : (
+                  <HermeticBarrierDiagram
+                    commodityId={formState.commodity_id}
+                    commodityName={results.commodity_name || formState.commodity_name}
+                    maxWvtr={results.requirements_derived.max_wvtr_g_m2_day}
+                    maxOtr={results.requirements_derived.max_otr_ml_m2_day_atm}
+                    allowableWaterGainG={results.requirements_derived.allowable_water_gain_g}
+                    packArea={results.requirements_derived.pack_area_m2}
+                    shelfLifeDays={results.requirements_derived.shelf_life_days}
+                    critMoisture={formState.critical_moisture}
                   />
                 )}
 
                 {/* Results Section Header */}
-                <div className="flex items-baseline justify-between pb-2 border-b border-rule">
+                <div className="flex items-baseline justify-between pb-3 border-b border-rule">
                   <div>
-                    <h3 className="font-serif text-xl font-medium text-ink tracking-tight">
+                    <h3 className="font-serif text-xl text-ink">
                       Recommended Packaging Substrates
                     </h3>
                     <p className="text-xs text-mute mt-0.5">
@@ -180,7 +212,7 @@ export const App: React.FC = () => {
 
                 {/* Passing Result Cards */}
                 <div className="space-y-4">
-                  {passingRecommendations.map((rec, idx) => (
+                  {passingRecommendations.map((rec: any, idx: number) => (
                     <ResultCard
                       key={rec.material_id}
                       rank={idx + 1}
@@ -194,7 +226,7 @@ export const App: React.FC = () => {
                   <div className="pt-6 border-t border-rule space-y-4">
                     <div className="flex items-baseline justify-between">
                       <div>
-                        <h4 className="font-serif text-base font-medium text-mute tracking-tight">
+                        <h4 className="font-serif text-base text-mute">
                           Did Not Meet Requirements
                         </h4>
                         <p className="text-xs text-mute/80">
@@ -206,8 +238,8 @@ export const App: React.FC = () => {
                       </span>
                     </div>
 
-                    <div className="space-y-3 opacity-80">
-                      {failingRecommendations.map((rec, idx) => (
+                    <div className="space-y-3 opacity-70">
+                      {failingRecommendations.map((rec: any, idx: number) => (
                         <ResultCard
                           key={rec.material_id}
                           rank={passingRecommendations.length + idx + 1}
@@ -221,11 +253,11 @@ export const App: React.FC = () => {
               </div>
             ) : (
               /* Empty state */
-              <div className="card p-12 text-center space-y-3">
+              <div className="card p-12 text-center space-y-4">
                 <div className="flex justify-center" aria-hidden="true">
                   <SpecimenTrayIllustration className="w-16 h-16" />
                 </div>
-                <h4 className="font-serif text-lg font-medium text-ink tracking-tight">
+                <h4 className="font-serif text-xl text-ink">
                   Awaiting Specimen Input
                 </h4>
                 <p className="text-xs text-mute max-w-sm mx-auto leading-relaxed">

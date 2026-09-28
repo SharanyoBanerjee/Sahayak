@@ -21,7 +21,7 @@ interface FieldRowProps {
 const FieldRow: React.FC<FieldRowProps> = ({ label, unit, children, wide }) => (
   <div className={`space-y-1.5 ${wide ? 'col-span-2 sm:col-span-3' : ''}`}>
     <div className="flex justify-between items-baseline">
-      <label className="label text-[10px] text-mute">{label}</label>
+      <label className="text-[10px] font-semibold uppercase tracking-wider text-mute">{label}</label>
       {unit && <span className="font-mono text-[10px] text-mute">{unit}</span>}
     </div>
     {children}
@@ -75,14 +75,14 @@ export const FoodForm: React.FC<FoodFormProps> = ({
       {/* Section 1: Commodity Selection & Mode */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="label text-ink">1. Commodity Specimen</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-ink">1. Commodity Specimen</span>
           {currentBotanical && (
             <span className="font-serif italic text-xs text-mute">{currentBotanical}</span>
           )}
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="border border-rule rounded p-2 bg-paper flex-shrink-0">
+          <div className="border border-rule rounded-lg p-2.5 bg-paper flex-shrink-0">
             <CommodityPlate
               commodityId={formState.commodity_id}
               isRespiring={formState.is_respiring}
@@ -135,8 +135,8 @@ export const FoodForm: React.FC<FoodFormProps> = ({
       </div>
 
       {/* Section 2: Intrinsic Chemical Properties */}
-      <div className="space-y-3 pt-3 border-t border-rule">
-        <span className="label text-ink">2. Composition & Water Activity</span>
+      <div className="space-y-3 pt-4 border-t border-rule">
+        <span className="text-xs font-semibold uppercase tracking-wider text-ink">2. Composition & Water Activity</span>
         <div className="grid grid-cols-3 gap-2.5">
           <FieldRow label="Moisture" unit="% w/w">
             <input
@@ -176,10 +176,10 @@ export const FoodForm: React.FC<FoodFormProps> = ({
 
       {/* Section 3: Respiration Parameters (Only for Produce) */}
       {formState.is_respiring && (
-        <div className="space-y-3 pt-3 border-t border-rule bg-wash/30 p-3 rounded border">
+        <div className="space-y-3 pt-4 border-t border-rule bg-accent-light/20 p-4 rounded-lg border border-accent/20">
           <div className="flex items-center gap-1.5">
-            <ArrowDownRight className="w-3.5 h-3.5 text-ink" />
-            <span className="label text-ink">3. Respiration Kinetics</span>
+            <ArrowDownRight className="w-3.5 h-3.5 text-accent" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-ink">3. Respiration Kinetics</span>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
             <FieldRow label="Base r_O₂" unit="mL / kg·h">
@@ -229,8 +229,8 @@ export const FoodForm: React.FC<FoodFormProps> = ({
       )}
 
       {/* Section 4: Storage & Ambient Conditions */}
-      <div className="space-y-3 pt-3 border-t border-rule">
-        <span className="label text-ink">
+      <div className="space-y-3 pt-4 border-t border-rule">
+        <span className="text-xs font-semibold uppercase tracking-wider text-ink">
           {formState.is_respiring ? '4. Storage & Logistics' : '3. Storage & Shelf Life'}
         </span>
         <div className="grid grid-cols-3 gap-2.5">
@@ -271,10 +271,10 @@ export const FoodForm: React.FC<FoodFormProps> = ({
         <button
           type="submit"
           disabled={isLoading}
-          className="btn-primary w-full py-2.5 text-xs"
+          className="btn-primary w-full py-3 text-sm"
         >
           <span>Calculate Recommendations</span>
-          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
     </form>

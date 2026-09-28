@@ -89,7 +89,7 @@ class RecommendView(APIView):
                 materials=all_materials,
                 is_produce=is_produce,
                 requirements=reqs,
-                top_n=3,
+                top_n=len(all_materials),
             )
 
             # 3. Attach explanations and citations for each recommendation

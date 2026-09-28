@@ -10,7 +10,7 @@ interface PresetBarProps {
 
 export const PresetBar: React.FC<PresetBarProps> = ({ onSelectPreset, activePreset }) => {
   return (
-    <div className="card p-3.5 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="card p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       {/* Label */}
       <div className="flex items-center gap-3">
         <span className="label">Reference Cases</span>
@@ -26,7 +26,7 @@ export const PresetBar: React.FC<PresetBarProps> = ({ onSelectPreset, activePres
           type="button"
           onClick={() => onSelectPreset(PRESET_TOMATO)}
           className={`btn-secondary text-xs ${
-            activePreset === 'CMD-001' ? 'bg-wash border-ink text-ink font-semibold' : ''
+            activePreset === 'CMD-001' ? 'bg-accent-light border-accent text-ink font-semibold' : ''
           }`}
           aria-pressed={activePreset === 'CMD-001'}
         >
@@ -40,7 +40,7 @@ export const PresetBar: React.FC<PresetBarProps> = ({ onSelectPreset, activePres
           type="button"
           onClick={() => onSelectPreset(PRESET_BISCUITS)}
           className={`btn-secondary text-xs ${
-            activePreset === 'CMD-005' ? 'bg-wash border-ink text-ink font-semibold' : ''
+            activePreset === 'CMD-005' ? 'bg-accent-light border-accent text-ink font-semibold' : ''
           }`}
           aria-pressed={activePreset === 'CMD-005'}
         >

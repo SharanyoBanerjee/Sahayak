@@ -54,21 +54,27 @@ export const EngineStepper: React.FC<EngineStepperProps> = ({ onComplete }) => {
             return (
               <div
                 key={label}
-                className={`flex items-center gap-3 px-3 py-2 border border-rule rounded text-xs transition-opacity duration-150 ${
+                className={`flex items-center gap-3 px-3 py-2.5 border rounded-lg text-xs transition-all duration-200 ${
                   isDone
-                    ? 'bg-card text-ink'
+                    ? 'bg-accent-light/30 text-ink border-accent/20'
                     : isCurrent
-                    ? 'bg-wash/40 text-ink font-medium'
+                    ? 'bg-paper text-ink font-medium border-accent'
                     : 'text-mute/60 border-rule/50'
                 }`}
               >
                 <div
-                  className="w-4 h-4 flex items-center justify-center border border-rule rounded-sm flex-shrink-0 bg-paper"
+                  className={`w-5 h-5 flex items-center justify-center rounded-full flex-shrink-0 ${
+                    isDone
+                      ? 'bg-accent text-white'
+                      : isCurrent
+                      ? 'bg-paper border-2 border-accent'
+                      : 'bg-paper border border-rule'
+                  }`}
                 >
                   {isDone ? (
-                    <Check className="w-3 h-3 text-ink" strokeWidth={2} aria-hidden="true" />
+                    <Check className="w-3 h-3" strokeWidth={2.5} aria-hidden="true" />
                   ) : isCurrent ? (
-                    <Loader2 className="w-2.5 h-2.5 text-ink animate-spin" aria-hidden="true" />
+                    <Loader2 className="w-2.5 h-2.5 text-accent animate-spin" aria-hidden="true" />
                   ) : (
                     <span className="font-mono text-[9px] text-mute">{idx + 1}</span>
                   )}
@@ -83,15 +89,15 @@ export const EngineStepper: React.FC<EngineStepperProps> = ({ onComplete }) => {
       {/* Skeleton Placeholder Cards */}
       <div className="space-y-4">
         {[1, 2].map((k) => (
-          <div key={k} className="card p-5 space-y-4 border-rule">
+          <div key={k} className="card p-5 space-y-4">
             <div className="flex justify-between items-center pb-3 border-b border-rule">
               <div className="w-48 h-4 placeholder-bar" />
               <div className="w-20 h-4 placeholder-bar" />
             </div>
-            <div className="h-2 w-full placeholder-bar" />
-            <div className="grid grid-cols-4 gap-2">
+            <div className="h-2.5 w-full placeholder-bar rounded-full" />
+            <div className="grid grid-cols-4 gap-3">
               {[1, 2, 3, 4].map((j) => (
-                <div key={j} className="h-12 placeholder-bar" />
+                <div key={j} className="h-14 placeholder-bar" />
               ))}
             </div>
           </div>

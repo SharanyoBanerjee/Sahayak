@@ -47,7 +47,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
   const animWater  = useCountUp(requirements.allowable_water_gain_g ?? 0);
 
   return (
-    <div className="card p-5 mb-5 sticky top-16 z-20 bg-card/95 backdrop-blur-sm">
+    <div className="card p-5 mb-5 sticky top-16 z-20 bg-white/95 backdrop-blur-sm">
       {/* Header */}
       <div className="card-header mb-3 pb-2">
         <span className="label">
@@ -61,7 +61,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
         {isProduce ? (
           <>
             <div className="req-tile space-y-1">
-              <span className="label text-[10px] text-mute block">Equilibrium Target OTR</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block">Equilibrium Target OTR</span>
               <div className="num text-2xl sm:text-3xl text-ink">
                 {animOtr.toLocaleString()}
               </div>
@@ -69,7 +69,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
             </div>
 
             <div className="req-tile space-y-1">
-              <span className="label text-[10px] text-mute block">Metabolic Rate @ Temp</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block">Metabolic Rate @ Temp</span>
               <div className="num text-2xl sm:text-3xl text-ink">
                 {animResp}
               </div>
@@ -77,7 +77,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
             </div>
 
             <div className="req-tile space-y-1">
-              <span className="label text-[10px] text-mute block">Min CO₂ Permeability</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block">Min CO₂ Permeability</span>
               <div className="num text-2xl sm:text-3xl text-ink">
                 {animCo2.toLocaleString()}
               </div>
@@ -85,7 +85,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
             </div>
 
             <div className="req-tile space-y-1">
-              <span className="label text-[10px] text-mute block">Target Specimen Mass</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block">Target Specimen Mass</span>
               <div className="num text-2xl sm:text-3xl text-ink">
                 {requirements.pack_weight_kg}<span className="text-sm font-sans font-normal text-mute ml-1">kg</span>
               </div>
@@ -95,7 +95,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
         ) : (
           <>
             <div className="req-tile space-y-1">
-              <span className="label text-[10px] text-mute block">Max Permissible WVTR</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block">Max Permissible WVTR</span>
               <div className="num text-2xl sm:text-3xl text-ink">
                 ≤ {animWvtr}
               </div>
@@ -103,7 +103,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
             </div>
 
             <div className="req-tile space-y-1">
-              <span className="label text-[10px] text-mute block">Max Permissible OTR</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block">Max Permissible OTR</span>
               <div className="num text-2xl sm:text-3xl text-ink">
                 ≤ {animDryOtr}
               </div>
@@ -111,7 +111,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
             </div>
 
             <div className="req-tile space-y-1">
-              <span className="label text-[10px] text-mute block">Allowable Moisture Gain</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block">Allowable Moisture Gain</span>
               <div className="num text-2xl sm:text-3xl text-ink">
                 {animWater}<span className="text-sm font-sans font-normal text-mute ml-1">g</span>
               </div>
@@ -119,7 +119,7 @@ export const RequirementStrip: React.FC<RequirementStripProps> = ({ requirements
             </div>
 
             <div className="req-tile space-y-1">
-              <span className="label text-[10px] text-mute block">Design Shelf Life</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block">Design Shelf Life</span>
               <div className="num text-2xl sm:text-3xl text-ink">
                 {requirements.shelf_life_days}<span className="text-sm font-sans font-normal text-mute ml-1">d</span>
               </div>

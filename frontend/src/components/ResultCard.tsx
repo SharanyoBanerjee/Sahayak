@@ -41,6 +41,8 @@ export const ResultCard: React.FC<ResultCardProps> = ({
 
   const FitIcon = isPass ? Check : isMarginal ? AlertCircle : X;
 
+  const fitIconColor = isPass ? 'text-accent' : isMarginal ? 'text-[#B87333]' : 'text-red-600';
+
   return (
     <div
       className={`card card--interactive ${
@@ -51,12 +53,12 @@ export const ResultCard: React.FC<ResultCardProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-3 border-b border-rule">
         <div className="flex items-baseline gap-3">
           {/* Rank marker */}
-          <span className="font-serif italic text-base text-ink font-medium flex-shrink-0">
+          <span className="font-serif italic text-base text-ink flex-shrink-0">
             {isFailing ? '—' : `No. ${rank}`}
           </span>
 
           <div>
-            <h4 className="font-serif text-lg font-medium text-ink tracking-tight">
+            <h4 className="font-serif text-lg text-ink">
               {recommendation.material_name}
             </h4>
             <p className="text-xs text-mute font-mono mt-0.5">
@@ -93,11 +95,11 @@ export const ResultCard: React.FC<ResultCardProps> = ({
         <FilmLayerStack structure={recommendation.structure} />
 
         {/* Fit Indicator */}
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <div className="flex justify-between items-center text-xs">
             <div className="flex items-center gap-1.5">
-              <FitIcon className="w-3.5 h-3.5 text-ink" strokeWidth={2} aria-hidden="true" />
-              <span className="label text-[10px] text-ink">{fitStatusText}</span>
+              <FitIcon className={`w-3.5 h-3.5 ${fitIconColor}`} strokeWidth={2} aria-hidden="true" />
+              <span className="text-[11px] font-semibold text-ink-2">{fitStatusText}</span>
             </div>
             <span className="font-mono text-xs font-medium text-ink">
               {recommendation.fit_score}% Compliance
@@ -113,31 +115,31 @@ export const ResultCard: React.FC<ResultCardProps> = ({
         </div>
 
         {/* Specs Table / Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 border border-rule rounded p-2.5 bg-paper/40 text-xs">
-          <div>
-            <span className="label text-[9px] text-mute block">Offered OTR</span>
-            <span className="font-mono font-medium text-ink block mt-0.5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div className="bg-paper rounded-lg p-3">
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-accent block">Offered OTR</span>
+            <span className="font-mono font-medium text-ink block mt-1">
               {recommendation.offered_otr.toLocaleString()}
             </span>
             <span className="text-[10px] font-mono text-mute">mL / m²·d·atm</span>
           </div>
-          <div>
-            <span className="label text-[9px] text-mute block">Offered WVTR</span>
-            <span className="font-mono font-medium text-ink block mt-0.5">
+          <div className="bg-paper rounded-lg p-3">
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-accent block">Offered WVTR</span>
+            <span className="font-mono font-medium text-ink block mt-1">
               {recommendation.offered_wvtr.toLocaleString()}
             </span>
             <span className="text-[10px] font-mono text-mute">g / m²·day</span>
           </div>
-          <div>
-            <span className="label text-[9px] text-mute block">Mechanical Integrity</span>
-            <span className="font-mono font-medium text-ink block mt-0.5">
+          <div className="bg-paper rounded-lg p-3">
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-accent block">Mechanical Integrity</span>
+            <span className="font-mono font-medium text-ink block mt-1">
               {recommendation.mechanical_strength}
             </span>
             <span className="text-[10px] font-mono text-mute">{recommendation.cost_tier} cost</span>
           </div>
-          <div>
-            <span className="label text-[9px] text-mute block">Substrate Type</span>
-            <span className="font-mono font-medium text-ink block mt-0.5 truncate">
+          <div className="bg-paper rounded-lg p-3">
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-accent block">Substrate Type</span>
+            <span className="font-mono font-medium text-ink block mt-1 truncate">
               {recommendation.breathable ? 'Breathable Film' : 'Barrier Laminate'}
             </span>
             <span className="text-[10px] font-mono text-mute">{recommendation.seal_type}</span>
@@ -164,7 +166,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
               href={recommendation.source.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-ink-2 hover:text-ink flex items-center gap-1 font-mono underline underline-offset-2"
+              className="text-xs text-accent hover:text-ink flex items-center gap-1 font-mono underline underline-offset-2"
             >
               <span>Citation</span>
               <ExternalLink className="w-3 h-3" aria-hidden="true" />
@@ -174,10 +176,10 @@ export const ResultCard: React.FC<ResultCardProps> = ({
 
         {/* Accordion Body */}
         {showExplanation && (
-          <div className="border border-rule rounded p-4 space-y-3 bg-paper/60 text-xs">
+          <div className="border border-rule rounded-lg p-4 space-y-3 bg-paper text-xs">
             {recommendation.explanation?.summary && (
               <div>
-                <span className="label text-[10px] text-mute block mb-1">Engineering Rationale</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block mb-1">Engineering Rationale</span>
                 <p className="text-ink-2 leading-relaxed font-normal">
                   {recommendation.explanation.summary}
                 </p>
@@ -186,12 +188,12 @@ export const ResultCard: React.FC<ResultCardProps> = ({
 
             {recommendation.explanation?.rules_fired && recommendation.explanation.rules_fired.length > 0 && (
               <div>
-                <span className="label text-[10px] text-mute block mb-1.5">Governing Rules Fired</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-accent block mb-1.5">Governing Rules Fired</span>
                 <div className="space-y-1.5">
                   {recommendation.explanation.rules_fired.map((rule) => (
                     <div
                       key={rule.rule_id}
-                      className="border border-rule/80 rounded px-2.5 py-1.5 bg-card text-xs"
+                      className="border border-rule rounded-lg px-3 py-2 bg-white text-xs"
                     >
                       <div className="flex items-baseline justify-between font-mono font-medium text-ink">
                         <span>{rule.name}</span>
@@ -206,7 +208,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
 
             {recommendation.source && (
               <div className="flex items-start gap-2 pt-2 border-t border-rule text-[11px] text-mute">
-                <BookOpen className="w-3.5 h-3.5 text-mute flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <BookOpen className="w-3.5 h-3.5 text-accent flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <span>Source: {recommendation.source.title}</span>
               </div>
             )}

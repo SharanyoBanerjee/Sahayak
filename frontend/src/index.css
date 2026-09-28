@@ -1,6 +1,6 @@
 /* ============================================================
-   Sahayak — Minimal Vintage, Monochrome Design System
-   Fonts: Newsreader (serif), Plus Jakarta Sans, IBM Plex Mono
+   Sahayak — AgriLink-Inspired Warm Cream + Forest Green
+   Fonts: DM Serif Display (serif), Plus Jakarta Sans, JetBrains Mono
    ============================================================ */
 
 @tailwind base;
@@ -11,19 +11,32 @@
    DESIGN TOKENS
    ============================================================ */
 :root {
-  /* One hue — warm sepia, stepped by lightness */
-  --paper:  #F3EEE4;   /* page background */
-  --card:   #FAF7F0;   /* card surface */
-  --wash:   #E9E2D3;   /* subtle fills, zebra stripes */
-  --rule:   #CFC5B3;   /* hairline borders */
-  --mute:   #857A6A;   /* secondary text */
-  --ink-2:  #4A4036;   /* body text */
-  --ink:    #241E18;   /* headings, primary buttons */
+  /* Warm cream background palette */
+  --paper:  #F5F0E8;
+  --card:   #FFFFFF;
+  --wash:   #EDE8DC;
+  --rule:   #D4CFC3;
+  --mute:   #7A7A6C;
+  --ink-2:  #2D3A2E;
+  --ink:    #1B4332;
 
-  --radius: 4px;
+  /* Accent greens */
+  --accent: #2D6A4F;
+  --accent-light: #D4E7D0;
+  --accent-badge: #40916C;
+
+  /* Tag colors */
+  --tag-premium:  #1B4332;
+  --tag-standard: #B87333;
+  --tag-economy:  #7A7A6C;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
   --hair:   1px solid var(--rule);
-  --frame:  1px solid var(--ink);
-  --lift:   0 1px 0 var(--rule), 0 8px 20px -14px rgba(36, 30, 24, 0.35);
+  --frame:  2px solid var(--ink);
+  --lift:   0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
+  --lift-hover: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06);
 }
 
 /* ============================================================
@@ -44,11 +57,11 @@
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Newsreader', Georgia, serif;
-    font-weight: 500;
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-weight: 400;
     color: var(--ink);
-    letter-spacing: -0.02em;
-    line-height: 1.25;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
   }
 
   /* Accessible focus */
@@ -56,7 +69,7 @@
     outline: none;
   }
   *:focus-visible {
-    outline: 2px solid var(--ink);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 }
@@ -65,14 +78,14 @@
    TYPOGRAPHY UTILITIES
    ============================================================ */
 
-/* Section label — 11px uppercase, traced from small caps */
+/* Section label — 11px uppercase, tracked */
 .label {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--mute);
+  letter-spacing: 0.1em;
+  color: var(--accent);
   line-height: 1;
 }
 
@@ -81,14 +94,13 @@
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
-  font-variant: small-caps;
   color: var(--mute);
   letter-spacing: 0.04em;
 }
 
 /* Tabular mono numbers */
 .num {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 28px;
   font-weight: 500;
   color: var(--ink);
@@ -97,7 +109,7 @@
 }
 
 .num-sm {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 13px;
   font-weight: 500;
   color: var(--ink-2);
@@ -109,69 +121,69 @@
    ============================================================ */
 .card {
   background: var(--card);
-  border: var(--hair);
+  border: 1px solid var(--rule);
   border-radius: var(--radius);
   box-shadow: var(--lift);
   padding: 24px;
-  transition: border-color 0.15s ease-out;
+  transition: box-shadow 0.2s ease-out, border-color 0.2s ease-out;
 }
 
-/* Double-rule framed card (main result card, hero diagram) */
+/* Framed card — thicker accent border */
 .card--framed {
-  border: var(--frame);
-  outline: 1px solid var(--rule);
-  outline-offset: 3px;
+  border: 2px solid var(--ink);
+  box-shadow: var(--lift);
 }
 
-/* Interactive card hover — quiet border change, no movement */
+/* Interactive card hover */
 .card--interactive:hover {
-  border-color: var(--ink);
+  box-shadow: var(--lift-hover);
+  border-color: var(--accent);
 }
 
-/* Card header rule: label left, hairline, optional tag right */
+/* Card header */
 .card-header {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 18px;
   padding-bottom: 12px;
-  border-bottom: var(--hair);
+  border-bottom: 1px solid var(--rule);
 }
 
 .card-header::after {
   content: '';
   flex: 1;
   height: 0;
-  border-top: var(--hair);
+  border-top: 1px solid var(--rule);
 }
 
 /* ============================================================
    FORM ELEMENTS
    ============================================================ */
 .field {
-  background: var(--card);
-  border: var(--hair);
-  border-radius: var(--radius);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
   color: var(--ink);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 13px;
   font-weight: 500;
-  padding: 7px 10px;
+  padding: 8px 12px;
   width: 100%;
-  transition: border-color 0.12s, box-shadow 0.12s;
+  transition: border-color 0.15s, box-shadow 0.15s;
   appearance: none;
 }
 
 .field:focus {
-  border-color: var(--ink);
-  box-shadow: 0 0 0 2px var(--rule);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
 }
 
 .field-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%234A4036' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%231B4332' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 28px;
+  background-position: right 12px center;
+  padding-right: 32px;
   cursor: pointer;
 }
 
@@ -180,15 +192,15 @@
    ============================================================ */
 .btn-primary {
   background: var(--ink);
-  color: var(--paper);
-  border: 1px solid var(--ink);
-  border-radius: var(--radius);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 13px;
   font-weight: 600;
-  padding: 9px 20px;
+  padding: 10px 24px;
   cursor: pointer;
-  transition: background 0.12s, border-color 0.12s;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -196,54 +208,60 @@
 }
 
 .btn-primary:hover {
-  background: var(--ink-2);
-  border-color: var(--ink-2);
+  background: var(--accent);
+  box-shadow: 0 4px 12px rgba(27, 67, 50, 0.25);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
 }
 
 .btn-primary:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 .btn-secondary {
   background: transparent;
   color: var(--ink-2);
   border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border-radius: 999px;
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 12px;
   font-weight: 500;
-  padding: 6px 14px;
+  padding: 7px 16px;
   cursor: pointer;
-  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
 .btn-secondary:hover {
-  border-color: var(--ink);
+  border-color: var(--accent);
   color: var(--ink);
-  background: var(--wash);
+  background: var(--accent-light);
 }
 
 /* Segmented control (Dry / Fresh) */
 .seg-control {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
   overflow: hidden;
+  background: var(--paper);
 }
 
 .seg-btn {
-  padding: 7px 10px;
+  padding: 8px 12px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.12s, color 0.12s;
+  transition: background 0.15s, color 0.15s;
   background: transparent;
   color: var(--mute);
   border: none;
@@ -251,16 +269,16 @@
 }
 
 .seg-btn + .seg-btn {
-  border-left: 1px solid var(--ink);
+  border-left: 1px solid var(--rule);
 }
 
 .seg-btn.active {
   background: var(--ink);
-  color: var(--paper);
+  color: #FFFFFF;
 }
 
 /* ============================================================
-   BADGE (Monochrome only)
+   BADGE
    ============================================================ */
 .badge {
   display: inline-flex;
@@ -270,57 +288,52 @@
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 2px;
+  padding: 3px 8px;
+  border-radius: 999px;
   line-height: 1.4;
 }
 
 .badge--sourced {
   background: var(--ink);
-  color: var(--paper);
+  color: #FFFFFF;
 }
 
 .badge--estimated {
   background: transparent;
-  color: var(--ink-2);
+  color: var(--mute);
   border: 1px solid var(--rule);
 }
 
 .badge--outline {
-  background: transparent;
-  color: var(--ink-2);
-  border: 1px solid var(--rule);
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1px solid var(--accent-light);
 }
 
 /* ============================================================
-   FIT INDICATOR (No color — Shape + Hatch + Label)
+   FIT INDICATOR
    ============================================================ */
 .fit-track {
   height: 8px;
   background: var(--wash);
-  border-radius: 2px;
+  border-radius: 999px;
   overflow: hidden;
   position: relative;
-  border: 1px solid var(--rule);
 }
 
-/* Pass: solid ink fill */
+/* Pass: forest green fill */
 .fit-fill--pass {
   height: 100%;
-  background: var(--ink);
+  background: var(--accent);
+  border-radius: 999px;
   transition: width 0.5s ease-out;
 }
 
-/* Marginal: diagonal hatch fill */
+/* Marginal: lighter green fill */
 .fit-fill--marginal {
   height: 100%;
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--ink) 0px,
-    var(--ink) 2px,
-    transparent 2px,
-    transparent 6px
-  );
+  background: var(--accent-light);
+  border-radius: 999px;
   transition: width 0.5s ease-out;
 }
 
@@ -330,10 +343,8 @@
 .req-tile-group {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border: var(--hair);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--card);
+  gap: 12px;
+  background: transparent;
 }
 
 @media (max-width: 640px) {
@@ -343,19 +354,11 @@
 }
 
 .req-tile {
-  padding: 14px 16px;
+  padding: 16px 18px;
   background: var(--card);
-  border-right: var(--hair);
-}
-
-.req-tile:last-child {
-  border-right: none;
-}
-
-@media (max-width: 640px) {
-  .req-tile:nth-child(2) { border-right: none; }
-  .req-tile:nth-child(3) { border-top: var(--hair); }
-  .req-tile:nth-child(4) { border-top: var(--hair); border-right: none; }
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--lift);
 }
 
 /* ============================================================
@@ -367,19 +370,20 @@
 }
 
 .progress-rule {
-  height: 1.5px;
-  background: var(--ink);
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--ink));
+  border-radius: 999px;
   animation: progressRule 0.6s ease-out forwards;
 }
 
 @keyframes placeholderFade {
-  0%, 100% { opacity: 0.55; }
-  50%       { opacity: 0.95; }
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.8; }
 }
 
 .placeholder-bar {
   background: var(--wash);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   animation: placeholderFade 1.2s ease-in-out infinite;
 }
 
@@ -388,13 +392,13 @@
    ============================================================ */
 .reveal {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(12px);
 }
 
 .reveal.in {
   opacity: 1;
   transform: none;
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out;
 }
 
 /* SVG Line Drawing */
@@ -407,6 +411,30 @@
 @keyframes drawLine {
   to { stroke-dashoffset: 0; }
 }
+
+/* ============================================================
+   CURTAIN LOADER ANIMATIONS
+   ============================================================ */
+@keyframes curtainProgress {
+  0% {
+    width: 0%;
+  }
+  40% {
+    width: 45%;
+  }
+  80% {
+    width: 85%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-curtain-progress {
+  animation: curtainProgress 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+
 
 /* ============================================================
    PRINT STYLESHEET
