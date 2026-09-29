@@ -9,13 +9,13 @@
 
 **Sahayak** is a deterministic, science-backed packaging recommendation engine built for **farmers, Farmer Producer Organisations (FPOs), startups, and MSME food processors**. Choosing packaging without expert consultation often causes rapid spoilage, moisture pickup, rancidity, or anaerobic fermentation.
 
-Sahayak takes a commodity's physical, chemical, and biological properties alongside targeted logistics and shelf-life requirements, calculates exact barrier constraints, and matches them against certified packaging materials. Every output includes a plain-language explanation, numerical diagnostics, and authoritative literature citations (BIS, FAO, academic postharvest sources).
+Sahayak takes a commodity's physical, chemical, and biological properties alongside the targeted logistics and shelf-life requirements it must meet, calculates exact barrier constraints, and matches them against a catalog of packaging materials with cited barrier properties. Every output includes a plain-language explanation, numerical diagnostics, and authoritative literature citations (BIS, FAO, academic postharvest sources).
 
 ---
 
 ## 2. Core UI & The Contrasting Demo Presets
 
-The interface follows a clean **Neo-Brutalist design system** (high-contrast cards, 3px ink outlines, flat vibrant fills, Plus Jakarta Sans & JetBrains Mono typography) with zero reliance on tech jargon:
+The interface follows a clean **Minimal Vintage design system** — editorial paper tones with forest-green ink, DM Serif Display headings, Plus Jakarta Sans UI text, and JetBrains Mono numerals — with zero reliance on tech jargon:
 
 1. **Preset 1: Fresh Tomato (Respiring Produce)**
    - Produce consumes oxygen and evolves carbon dioxide post-harvest.
@@ -26,7 +26,7 @@ The interface follows a clean **Neo-Brutalist design system** (high-contrast car
 2. **Preset 2: Crispy Biscuits (Dry & Lipid-Sensitive Snack)**
    - High risk of sogginess from moisture absorption and rancidity from lipid autoxidation.
    - The engine calculates Maximum Allowable $\text{WVTR}$ (Water Vapour Transmission Rate) from critical moisture limits and Maximum Allowable $\text{OTR}$ (Oxygen Transmission Rate) from fat concentration.
-   - **Result:** Recommends **High-Barrier Metallised PET / LDPE** or **PET / Aluminium Foil / PE** laminates.
+   - **Result:** Recommends **PET / Aluminium Foil / PE** laminates, with **High-Barrier Metallised PET / LDPE** as an alternative.
 
 ---
 
@@ -74,9 +74,9 @@ sahayak/
 │   └── Dockerfile
 ├── frontend/
 │   ├── src/
-│   │   ├── components/      # FoodForm, ResultCard, RequirementStrip, Illustrations, Header
+│   │   ├── components/      # FoodForm, ResultCard, RequirementStrip, Illustrations, CurtainLoader, Header
 │   │   ├── lib/             # API client, presets, types, useReveal hook
-│   │   ├── App.tsx          # Main Neo-Brutalist application view
+│   │   ├── App.tsx          # Main application view (Minimal Vintage design system)
 │   │   └── index.css        # Design tokens, keyframe animations, accessibility
 │   ├── package.json
 │   ├── vite.config.ts
@@ -100,9 +100,8 @@ sahayak/
 
 1. **Start the Backend:**
    ```bash
-   # In the project root
    python3 -m venv .venv
-   source .venv/bin/activate
+   source .venv/bin/activate   # in the project root
    pip install -r backend/requirements.txt
 
    # Migrate and seed catalog
@@ -138,7 +137,7 @@ sahayak/
 |---|---|---|
 | `GET` | `/api/health/` | Service health status |
 | `GET` | `/api/commodities/` | Catalog of pre-configured food commodities |
-| `GET` | `/api/materials/` | Certified barrier substrates and films |
+| `GET` | `/api/materials/` | Barrier substrates and films with sourced property data |
 | `POST` | `/api/recommend/` | Main recommendation endpoint |
 
 ### Example Recommendation Payload (`POST /api/recommend/`)
@@ -173,6 +172,6 @@ sahayak/
 
 ---
 
-## 8. License
+## 8. Acknowledgements
 
-Developed for the Smart India Hackathon.
+Developed for the Smart India Hackathon — Ministry of Food Processing Industries problem statement SIH236.
