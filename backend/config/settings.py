@@ -69,10 +69,12 @@ if os.environ.get("POSTGRES_DB"):
         }
     }
 else:
+    # SAHAYAK_DB_PATH lets the Vercel serverless bundle point at its
+    # bundled read-only catalog (see api/index.py).
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "NAME": os.environ.get("SAHAYAK_DB_PATH", str(BASE_DIR / "db.sqlite3")),
         }
     }
 

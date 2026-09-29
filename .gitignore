@@ -45,3 +45,7 @@ dist-ssr/
 .env
 .env.local
 .env.*.local
+
+# Vercel
+.vercel/
+api/catalog.sqlite3
