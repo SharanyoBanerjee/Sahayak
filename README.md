@@ -131,7 +131,20 @@ sahayak/
 
 ---
 
-## 6. API Reference
+## 6. Deployment (Vercel)
+
+Sahayak runs entirely on Vercel's free tier. The frontend builds to static assets served from the CDN; `/api/*` requests route to a Django WSGI serverless function (`api/index.py`).
+
+The serverless filesystem is read-only at runtime, so the SQLite catalog is created and seeded **at build time** (`scripts/vercel-build.sh` builds a fresh catalog via `SAHAYAK_DB_PATH` and bundles it with the function). This matches the engine's contract: every endpoint is a read or pure computation. Limitations of this mode: the Django admin and any runtime writes are unavailable, and catalog changes ship by rebuilding (i.e. merging to `main`).
+
+- **Deploy:** every push to `main` builds and deploys automatically (the GitHub repo is connected to the Vercel project). First-time setup: `npx vercel login`, then `npx vercel link --yes --project sahayak`, then `npx vercel deploy --prod --yes`.
+- **Environment variables:** none required. The function forces SQLite (`POSTGRES_*` is ignored) and disables `DEBUG`.
+- **Python dependencies for the function** live in `api/requirements.txt` (the Vercel Python runtime loads the `application` WSGI callable from `api/index.py` directly; no adapter package).
+- **Access:** Deployment Protection (Vercel Authentication) is on by default; disable it under Project Settings → Deployment Protection for a public demo link.
+
+---
+
+## 7. API Reference
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -162,7 +175,7 @@ sahayak/
 
 ---
 
-## 7. Authoritative Sources & Standards
+## 8. Authoritative Sources & Standards
 
 - **Bureau of Indian Standards (BIS):** IS 10171 – Guide on Packaging of Fresh Fruits and Vegetables.
 - **Kader, A. A. (2002):** *Postharvest Technology of Horticultural Crops*, UC Davis.
@@ -172,6 +185,6 @@ sahayak/
 
 ---
 
-## 8. Acknowledgements
+## 9. Acknowledgements
 
 Developed for the Smart India Hackathon — Ministry of Food Processing Industries problem statement SIH236.
